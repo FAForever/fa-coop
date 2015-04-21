@@ -25,32 +25,28 @@ function AssignAINames()
     -- Get the armies defined in the scenario.
     local scenarioArmies = MapUtil.ReallyGetArmies(scenarioInfo)
 
-    -- A list of the armies we've added (the three additional co-op players)
-    local addedArmies = {}
-    for spot, army in gameInfo.PlayerOptions do
-        if spot ~= 1 then
-            table.insert(addedArmies, army)
-        end
-    end
+    -- Map the human army-names to their entries in PlayerOptions.
+    local addedArmies = {
+        Player = gameInfo.PlayerOptions[1],
+        Coop1 = gameInfo.PlayerOptions[2],
+        Coop2 = gameInfo.PlayerOptions[3],
+        Coop3 = gameInfo.PlayerOptions[4]
+    }
 
-    local addedArmyIndex = 1
+    -- We need to place each army at the index in PlayerOptions corresponding to the army's index in
+    -- the map's army table. There are usually a bunch of other AI armies defined in the table,
+    -- which we can probably ignore. I hope.
+    -- Some dipshit decided not to standardise this.
     for armyIndex, armyName in scenarioArmies do
-        -- The scenario may define other armies.
-        -- Until this point, we've behaved as if the scenario only contains the fixed set:
-        -- {"Player", "Coop1", "Coop2", "Coop3"}
-        -- This fixed set is the armies we use for the four players, though the scenario may have a
-        -- variety of other armies in it, which we here populate with AIs.
-        -- We also must place our players in the right slot in PlayerOptions for their corresponding
-        -- army, which is also handled here.
-        if armyName ~= "Player" and not stringstarts(armyName, "Coop") then
+        if armyName == "Player" or stringstarts(armyName, "Coop") then
+            gameInfo.PlayerOptions[armyIndex] = addedArmies[armyName]
+        else
+            -- Fill in the other armies with AIs.
             local newPlayer = LobbyComm.GetDefaultPlayerOptions(armyName)
             newPlayer.Human = false
             newPlayer.Faction = 1
 
             gameInfo.PlayerOptions[armyIndex] = newPlayer
-        elseif stringstarts(armyName, "Coop") and table.getn(addedArmies) >= addedArmyIndex then
-            gameInfo.PlayerOptions[armyIndex] = addedArmies[addedArmyIndex]
-            addedArmyIndex = addedArmyIndex + 1
         end
     end
 
