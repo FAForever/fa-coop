@@ -40,17 +40,17 @@ table.insert(globalOpts,
             {
                 text = "<LOC coop_003>Easy",
                 help = "<LOC coop_004>Fairly dull",
-                key = 'easy',
+                key = 1,
             },
             {
                 text = "<LOC coop_005>Medium",
                 help = "<LOC coop_006>A moderate challenge",
-                key = 'medium',
+                key = 2,
             },
             {
                 text = "<LOC coop_007>Hard",
                 help = "<LOC coop_008>You will cry",
-                key = 'hard',
+                key = 3,
             }
         },
     }
