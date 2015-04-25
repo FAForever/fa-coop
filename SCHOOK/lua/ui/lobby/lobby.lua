@@ -27,10 +27,10 @@ function AssignAINames()
 
     -- Map the human army-names to their entries in PlayerOptions.
     local addedArmies = {
-        Player = gameInfo.PlayerOptions[1],
-        Coop1 = gameInfo.PlayerOptions[2],
-        Coop2 = gameInfo.PlayerOptions[3],
-        Coop3 = gameInfo.PlayerOptions[4]
+        Player = 1,
+        Coop1 = 2,
+        Coop2 = 3,
+        Coop3 = 4
     }
 
     -- We need to place each army at the index in PlayerOptions corresponding to the army's index in
@@ -39,7 +39,10 @@ function AssignAINames()
     -- Some dipshit decided not to standardise this.
     for armyIndex, armyName in scenarioArmies do
         if armyName == "Player" or stringstarts(armyName, "Coop") then
-            gameInfo.PlayerOptions[armyIndex] = addedArmies[armyName]
+            local ourArmyIndex = addedArmies[armyName]
+            if gameInfo.PlayerOptions[ourArmyIndex] then
+                HostUtils.SwapPlayers(ourArmyIndex, armyIndex)
+            end
         else
             -- Fill in the other armies with AIs.
             HostUtils.AddAI("", "adaptive", armyIndex)
