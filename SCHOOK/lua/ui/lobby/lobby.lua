@@ -42,11 +42,7 @@ function AssignAINames()
             gameInfo.PlayerOptions[armyIndex] = addedArmies[armyName]
         else
             -- Fill in the other armies with AIs.
-            local newPlayer = LobbyComm.GetDefaultPlayerOptions(armyName)
-            newPlayer.Human = false
-            newPlayer.Faction = 1
-
-            gameInfo.PlayerOptions[armyIndex] = newPlayer
+            HostUtils.AddAI("", "adaptive", armyIndex)
         end
     end
 
