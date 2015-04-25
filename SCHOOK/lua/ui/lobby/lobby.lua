@@ -73,20 +73,6 @@ lobbyComm.GameLaunched = function(self)
 
     scenarioInfo = MapUtil.LoadScenario(gameInfo.GameOptions.ScenarioFile)
 
-    -- Populate the HumanPlayers list in the scenario.
-    -- The maps are inconsistent about what they declare to actually be in the list.
-    -- So let's just rewrite the fucking thing ourselves.
-    local imaginaryArmyList = MapUtil.GetArmies()
-
-    local newHumanPlayers = {}
-    for i, v in imaginaryArmyList do
-        if gameInfo.PlayerOptions[i] then
-            table.insert(newHumanPlayers, v)
-        end
-    end
-
-    scenarioInfo.HumanPlayers = newHumanPlayers
-
     GameReallyLaunched()
 end
 
