@@ -3,7 +3,7 @@ function stringstarts(String,Start)
 end
 
 local reallyAssignAINames = AssignAINames
---- We want to do some work right before the game launches.
+--- We want to do some work for the host right before the game launches.
 -- Handily, AssignAINames happens right then. So let's hook that. We're maybe going to insert some
 -- AIs, though, so we need to run it afterwards.
 function AssignAINames()
@@ -52,6 +52,28 @@ function AssignAINames()
 
     -- Finally, really assign the AI names (now we're finished farting about with AIs.
     reallyAssignAINames()
+end
+
+-- Some extra magic is also needed at launch-time for everyone.
+local GameReallyLaunched = lobbyComm.GameLaunched
+lobbyComm.GameLaunched = function(self)
+    scenarioInfo = MapUtil.LoadScenario(gameInfo.GameOptions.ScenarioFile)
+
+    -- Populate the HumanPlayers list in the scenario.
+    -- The maps are inconsistent about what they declare to actually be in the list.
+    -- So let's just rewrite the fucking thing ourselves.
+    local imaginaryArmyList = MapUtil.GetArmies()
+
+    local newHumanPlayers = {}
+    for i, v in imaginaryArmyList do
+        if gameInfo.PlayerOptions[i] then
+            table.insert(newHumanPlayers, v)
+        end
+    end
+
+    scenarioInfo.HumanPlayers = newHumanPlayers
+
+    GameReallyLaunched()
 end
 
 -- Do some extra logic at the end of CreateUI to delete some buttons that make no sense.
