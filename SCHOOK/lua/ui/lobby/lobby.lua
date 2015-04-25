@@ -2,6 +2,18 @@ function stringstarts(String,Start)
     return string.sub(String,1,string.len(Start))==Start
 end
 
+-- While we're in the lobby, let's pretend the seraphim don't exist.
+-- This elegantly makes absolutely everything - including randomised factions - work correctly.
+local newFactionData = {}
+for index, tbl in FactionData.Factions do
+    if tbl.Key ~= "seraphim" then
+        table.insert(newFactionData, tbl)
+    end
+end
+
+local realFactionData = FactionData.Factions
+FactionData.Factions = newFactionData
+
 local reallyAssignAINames = AssignAINames
 --- We want to do some work for the host right before the game launches.
 -- Handily, AssignAINames happens right then. So let's hook that. We're maybe going to insert some
@@ -56,6 +68,9 @@ end
 -- Some extra magic is also needed at launch-time for everyone.
 local GameReallyLaunched = lobbyComm.GameLaunched
 lobbyComm.GameLaunched = function(self)
+    -- Okay, okay, the seraphim really exist. Let's not break anything by keeping this pretense up.
+    FactionData.Factions = realFactionData
+
     scenarioInfo = MapUtil.LoadScenario(gameInfo.GameOptions.ScenarioFile)
 
     -- Populate the HumanPlayers list in the scenario.
