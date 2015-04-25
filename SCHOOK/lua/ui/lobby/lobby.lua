@@ -14,14 +14,14 @@ end
 local realFactionData = FactionData.Factions
 FactionData.Factions = newFactionData
 
-local reallyAssignAINames = AssignAINames
---- We want to do some work for the host right before the game launches.
--- Handily, AssignAINames happens right then. So let's hook that. We're maybe going to insert some
--- AIs, though, so we need to run it afterwards.
-function AssignAINames()
-    -- A tiny bit of possible future-proofing...
-    if not lobbyComm:IsHost() then
-        WARN(debug.traceback(nil, ("AssignAINames by non-host! Somebody probably refactored something...")))
+local reallySendObserverList = sendObserversList
+-- We need to rearrange some players right before we start.
+function sendObserversList(arg)
+    -- The most brittle thing in the entire universe.
+    -- The only time this is called without arguments is the time we want in LaunchGame.
+    -- This is the least insane hook-point for a pre-WVT-flattening LaunchGame() tweak. It'll work.
+    if arg then
+        reallySendObserverList(arg)
         return
     end
 
@@ -61,8 +61,8 @@ function AssignAINames()
         end
     end
 
-    -- Finally, really assign the AI names (now we're finished farting about with AIs.
-    reallyAssignAINames()
+    -- ... Aaand sacrifice a goat.
+    reallySendObserverList()
 end
 
 -- Some extra magic is also needed at launch-time for everyone.
