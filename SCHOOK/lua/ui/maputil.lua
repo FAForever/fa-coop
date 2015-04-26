@@ -28,3 +28,34 @@ function EnumerateSkirmishScenarios(nameFilter, sortFunc)
 
     return scenarios
 end
+
+--- Campaign maps do this completely differently, defining an ACU army unit for each player and
+-- spawning it with a script.
+-- Having standardised the location of this definition, we can now exploit this to kinda-sorta show
+-- the spawn position.
+function GetStartPositions(scenario)
+    local saveData = {}
+    doscript('/lua/dataInit.lua', saveData)
+    doscript(scenario.save, saveData)
+
+    local armyPositions = {}
+    local armiesOfInterest = GetArmies()
+    for k, armyName in armiesOfInterest do
+        local armyTable = saveData.Scenario.Armies[armyName]
+        WARN(repr(armyTable))
+
+        if armyTable['Units'].Units and armyTable['Units'].Units['CybranPlayer'].Position then
+            -- Perhaps pick the right one by faction here. For now I just don't care. Such coupling.
+            -- ... And they're all the same.
+            local pos = armyTable['Units'].Units['CybranPlayer'].Position
+            armyPositions[armyName] = {
+                pos[1],
+                pos[3]
+            }
+        else
+            armyPositions[armyName] = {0, 0}
+        end
+    end
+
+    return armyPositions
+end
