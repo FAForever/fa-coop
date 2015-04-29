@@ -45,3 +45,15 @@ function SetupSession()
         end
     end
 end
+
+local ReallyBeginSession = BeginSession
+function BeginSession()
+    ReallyBeginSession()
+
+    -- Hide all but the player army score, and do something mystereous to playable rects.
+    for i = 2, table.getn(ScenarioInfo.HumanPlayers) do
+        local armyId = ScenarioInfo.HumanPlayers[i]
+        SetArmyShowScore(armyId, false)
+        SetIgnorePlayableRect(armyId, true)
+    end
+end
