@@ -1,7 +1,3 @@
-function stringstarts(String,Start)
-    return string.sub(String,1,string.len(Start))==Start
-end
-
 -- While we're in the lobby, let's pretend the seraphim don't exist.
 -- This elegantly makes absolutely everything - including randomised factions - work correctly.
 local newFactionData = {}
@@ -14,58 +10,11 @@ end
 local realFactionData = FactionData.Factions
 FactionData.Factions = newFactionData
 
-local reallySendObserverList = sendObserversList
--- We need to rearrange some players right before we start.
-function sendObserversList(arg)
-    -- The most brittle thing in the entire universe.
-    -- The only time this is called without arguments is the time we want in LaunchGame.
-    -- This is the least insane hook-point for a pre-WVT-flattening LaunchGame() tweak. It'll work.
-    if arg then
-        reallySendObserverList(arg)
-        return
-    end
-
-    -- We do end up doing this twice now. *shrug*
-    scenarioInfo = MapUtil.LoadScenario(gameInfo.GameOptions.ScenarioFile)
-
-    -- Get the armies defined in the scenario.
-    local scenarioArmies = MapUtil.ReallyGetArmies(scenarioInfo)
-
-    -- Map the human army-names to their entries in PlayerOptions.
-    local addedArmies = {
-        Player = 1,
-        Coop1 = 2,
-        Coop2 = 3,
-        Coop3 = 4
-    }
-
-    -- We need to place each army at the index in PlayerOptions corresponding to the army's index in
-    -- the map's army table. There are usually a bunch of other AI armies defined in the table,
-    -- which we can probably ignore. I hope.
-    -- Some dipshit decided not to standardise this.
-    for armyIndex, armyName in scenarioArmies do
-        if armyName == "Player" or stringstarts(armyName, "Coop") then
-            local ourArmyIndex = addedArmies[armyName]
-            if gameInfo.PlayerOptions[ourArmyIndex] then
-                HostUtils.SwapPlayers(ourArmyIndex, armyIndex)
-            end
-        else
-            -- Fill in the other armies with AIs.
-            HostUtils.AddAI("", "adaptive", armyIndex)
-        end
-    end
-
-    -- ... Aaand sacrifice a goat.
-    reallySendObserverList()
-end
-
 -- Some extra magic is also needed at launch-time for everyone.
 local GameReallyLaunched = lobbyComm.GameLaunched
 lobbyComm.GameLaunched = function(self)
     -- Okay, okay, the seraphim really exist. Let's not break anything by keeping this pretense up.
     FactionData.Factions = realFactionData
-
-    scenarioInfo = MapUtil.LoadScenario(gameInfo.GameOptions.ScenarioFile)
 
     GameReallyLaunched()
 end
