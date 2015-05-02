@@ -25,12 +25,6 @@ function sendObserversList(arg)
         return
     end
 
-    -- For mission 2, apply GPG's official *mission 2 specific* mod....
-    if gameInfo.GameOptions.ScenarioFile == '/maps/scca_coop_e02_v02/scca_coop_e02_v02_scenario.lua' then
-        gameInfo.GameMods["e7846e9b-23a4-4b95-ae3a-fb69b289a585"] = true
-        HostUpdateMods()
-    end
-
     -- We do end up doing this twice now. *shrug*
     scenarioInfo = MapUtil.LoadScenario(gameInfo.GameOptions.ScenarioFile)
 
