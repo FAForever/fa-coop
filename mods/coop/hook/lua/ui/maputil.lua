@@ -42,7 +42,6 @@ function GetStartPositions(scenario)
     local armiesOfInterest = GetArmies()
     for k, armyName in armiesOfInterest do
         local armyTable = saveData.Scenario.Armies[armyName]
-        WARN(repr(armyTable))
 
         if armyTable['Units'].Units and armyTable['Units'].Units['CybranPlayer'].Position then
             -- Perhaps pick the right one by faction here. For now I just don't care. Such coupling.

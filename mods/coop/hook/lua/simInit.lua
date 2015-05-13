@@ -16,9 +16,6 @@ function SetupSession()
 
     local newHumanPlayers = {}
     for i, armyName in imaginaryArmyList do
-        WARN(i)
-        WARN(armyName)
-        WARN(repr(ScenarioInfo.ArmySetup[armyName]))
         if ScenarioInfo.ArmySetup[armyName] then
             table.insert(newHumanPlayers, armyName)
         else
