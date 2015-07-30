@@ -45,10 +45,11 @@ local ReallyBeginSession = BeginSession
 function BeginSession()
     ReallyBeginSession()
 
-    -- Hide all but the player army score, and do something mystereous to playable rects.
-    for i = 2, table.getn(ScenarioInfo.HumanPlayers) do
-        local armyId = ScenarioInfo.HumanPlayers[i]
-        SetArmyShowScore(armyId, false)
-        SetIgnorePlayableRect(armyId, true)
+    # Hide scores for AI's and make them able to place orders outside the playable rect
+    for i = 1, table.getn(ArmyBrains) do
+        if not table.find(ScenarioInfo.HumanPlayers, i) then
+            SetArmyShowScore(i, false)
+            SetIgnorePlayableRect(i, true)
+        end
     end
 end
