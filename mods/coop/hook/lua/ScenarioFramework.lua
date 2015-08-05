@@ -120,3 +120,37 @@ function PlayerLose(dialogue, currentObjectives)
         terminateMission()
     end
 end
+
+-- Reminder mechanism.
+-- Each map can provide a "REMINDERS" table, each of which can provide reminders for each objective.
+
+function PlayReminder(reminderSpec, index)
+    if ScenarioInfo[reminderSpec.CompletionFlag] then
+        return
+    end
+
+    local reminders = reminderSpec.Reminders
+
+    -- There may not be any more reminders defined.
+    local reminder = reminders[index]
+    if not reminder then
+        return
+    end
+
+    local nextDelay = reminder.Delay or reminderSpec.Delay
+
+    local nextIndex = index + 1
+    local spec = reminderSpec
+    local function next()
+        ScenarioFramework.Dialogue(reminder.Dialogue)
+        PlayReminder(spec, nextIndex)
+    end
+
+    ScenarioFramework.CreateTimerTrigger(next, nextDelay)
+end
+
+--- Start running the reminders from the given reminder specification table. Once the corresponding
+-- completion flag is set the messages will stop.
+function StartReminders(remindersTable)
+    PlayReminder(remindersTable, 1)
+end
