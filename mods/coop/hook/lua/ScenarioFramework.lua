@@ -56,3 +56,67 @@ function UnrestrictWithVoiceoverAndDelay(cats, VOFac, delay, VO, silent)
         delay
     )
 end
+
+-- Utility functions for losing
+
+--- Called when one of the players is killed
+--
+-- @param deadCommander A reference to the player ACU that got killed.
+-- @param failureDialogue A VO to play explaining how much of a failure you are (if any).
+-- @param currentObjectives The AssignedObjectives from the map.
+function PlayerDeath(deadCommander, failureDialogue, currentObjectives)
+    if ScenarioInfo.OpEnded or ScenarioInfo.OperationEnding then
+        return
+    end
+    ScenarioInfo.OperationEnding = true
+
+    ScenarioFramework.CDRDeathNISCamera(deadCommander)
+    ScenarioFramework.EndOperationSafety()
+
+    local objectives = currentObjectives
+    local continuation = function()
+        ForkThread(
+            function()
+                WaitSeconds(1)
+                UnlockInput()
+                PlayerLose(nil, objectives)
+            end
+        )
+    end
+
+    -- Play failure dialogue before continuing.
+    if failureDialogue then
+        ScenarioFramework.FlushDialogueQueue()
+        ScenarioFramework.Dialogue(failureDialogue, continuation, true)
+    else
+        continuation()
+    end
+end
+
+function PlayerLose(dialogue, currentObjectives)
+    if ScenarioInfo.OpEnded then
+        return
+    end
+
+    EndOperationSafety()
+    ScenarioInfo.OpComplete = false
+    if currentObjectives then
+        for k, v in currentObjectives do
+            if v and v.Active then
+                v:ManualResult(false)
+            end
+        end
+    end
+
+    -- Wait for any failure dialogue before exiting.
+    local terminateMission = function()
+        ScenarioFramework.EndOperation(ScenarioInfo.OpComplete, ScenarioInfo.OpComplete, false)
+    end
+
+    if dialogue then
+        ScenarioFramework.FlushDialogueQueue()
+        ScenarioFramework.Dialogue(dialogue, terminateMission, true)
+    else
+        terminateMission()
+    end
+end
