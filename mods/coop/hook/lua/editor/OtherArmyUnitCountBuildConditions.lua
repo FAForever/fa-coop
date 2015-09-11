@@ -125,11 +125,16 @@ end
 --
 --#############################################################################################################
 function FocusBrainBeingBuiltOrActiveCategoryCompare( aiBrain, numReq, categories, compareType )
-    local testBrain = ArmyBrains[GetFocusArmy()]
     local num = 0
-    for k,v in categories do
-        num = num + testBrain:GetBlueprintStat('Units_BeingBuilt', v)
-        num = num + testBrain:GetBlueprintStat('Units_Active', v)
+    local tblArmy = ListArmies()
+    for iArmy, strArmy in pairs(tblArmy) do
+        if ScenarioInfo.ArmySetup[strArmy].Human then
+            local testBrain = GetArmyBrain(strArmy)
+                for k,v in categories do
+                    num = num + testBrain:GetBlueprintStat('Units_BeingBuilt', v)
+                    num = num + testBrain:GetBlueprintStat('Units_Active', v)
+                end            
+        end
     end
 
     if not compareType or compareType == '>=' then
