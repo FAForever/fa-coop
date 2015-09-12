@@ -1,4 +1,4 @@
--- Forged Alliance Forever mod_info.lua file
+-- Forged Alliance Forever coop mod_info.lua file
 --
 -- Documentation for the extended FAF mod_info.lua format can be found here:
 -- https://github.com/FAForever/fa/wiki/mod_info.lua-documentation
