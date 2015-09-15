@@ -70,8 +70,8 @@ function PlayerDeath(deadCommander, failureDialogue, currentObjectives)
     end
     ScenarioInfo.OperationEnding = true
 
-    ScenarioFramework.CDRDeathNISCamera(deadCommander)
-    ScenarioFramework.EndOperationSafety()
+    CDRDeathNISCamera(deadCommander)
+    EndOperationSafety()
 
     local objectives = currentObjectives
     local continuation = function()
@@ -86,8 +86,8 @@ function PlayerDeath(deadCommander, failureDialogue, currentObjectives)
 
     -- Play failure dialogue before continuing.
     if failureDialogue then
-        ScenarioFramework.FlushDialogueQueue()
-        ScenarioFramework.Dialogue(failureDialogue, continuation, true)
+        FlushDialogueQueue()
+        Dialogue(failureDialogue, continuation, true)
     else
         continuation()
     end
@@ -110,12 +110,12 @@ function PlayerLose(dialogue, currentObjectives)
 
     -- Wait for any failure dialogue before exiting.
     local terminateMission = function()
-        ScenarioFramework.EndOperation(ScenarioInfo.OpComplete, ScenarioInfo.OpComplete, false)
+        EndOperation(ScenarioInfo.OpComplete, ScenarioInfo.OpComplete, false)
     end
 
     if dialogue then
-        ScenarioFramework.FlushDialogueQueue()
-        ScenarioFramework.Dialogue(dialogue, terminateMission, true)
+        FlushDialogueQueue()
+        Dialogue(dialogue, terminateMission, true)
     else
         terminateMission()
     end
@@ -142,11 +142,11 @@ function PlayReminder(reminderSpec, index)
     local nextIndex = index + 1
     local spec = reminderSpec
     local function next()
-        ScenarioFramework.Dialogue(reminder.Dialogue)
+        Dialogue(reminder.Dialogue)
         PlayReminder(spec, nextIndex)
     end
 
-    ScenarioFramework.CreateTimerTrigger(next, nextDelay)
+    CreateTimerTrigger(next, nextDelay)
 end
 
 --- Start running the reminders from the given reminder specification table. Once the corresponding
