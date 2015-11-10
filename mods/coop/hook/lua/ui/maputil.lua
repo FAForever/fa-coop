@@ -29,32 +29,35 @@ function EnumerateSkirmishScenarios(nameFilter, sortFunc)
     return scenarios
 end
 
---- Campaign maps do this completely differently, defining an ACU army unit for each player and
+-- Campaign maps do this completely differently, defining an ACU army unit for each player and
 -- spawning it with a script.
--- Having standardised the location of this definition, we can now exploit this to kinda-sorta show
--- the spawn position.
+-- We search human armies for units with ACU ID which ends ..l0001 for all factions, searching all subgroups,
+-- setting position of ACU as starting position.
 function GetStartPositions(scenario)
     local saveData = {}
     doscript('/lua/dataInit.lua', saveData)
     doscript(scenario.save, saveData)
-
+ 
     local armyPositions = {}
     local armiesOfInterest = GetArmies()
     for k, armyName in armiesOfInterest do
         local armyTable = saveData.Scenario.Armies[armyName]
-
-        if armyTable['Units'].Units and armyTable['Units'].Units['CybranPlayer'].Position then
-            -- Perhaps pick the right one by faction here. For now I just don't care. Such coupling.
-            -- ... And they're all the same.
-            local pos = armyTable['Units'].Units['CybranPlayer'].Position
-            armyPositions[armyName] = {
-                pos[1],
-                pos[3]
-            }
-        else
-            armyPositions[armyName] = {0, 0}
+        armyPositions[armyName] = {0, 0}
+        GetStartPositionsRecursively(armyName, armyPositions, armyTable)
+    end
+    return armyPositions
+end
+ 
+function GetStartPositionsRecursively(armyName, armyPositions, t)
+    if( type(t) == 'table') then
+        for i, v in t or {} do
+            GetStartPositionsRecursively(armyName, armyPositions, v)
+        end
+ 
+        if not (t["type"] == nil) then
+            if(string.find(t["type"], "..l0001")) then
+                armyPositions[armyName] = {t.Position[1], t.Position[3]}
+            end
         end
     end
-
-    return armyPositions
 end
