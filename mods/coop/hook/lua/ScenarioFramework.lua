@@ -57,6 +57,14 @@ function UnrestrictWithVoiceoverAndDelay(cats, VOFac, delay, VO, silent)
     )
 end
 
+-- Sets unit capacity depending on number of the players
+function SetSharedUnitCap(number)
+    local unitCap = number / table.getn(ScenarioInfo.HumanPlayers)
+    for _, player in ScenarioInfo.HumanPlayers do
+        SetArmyUnitCap(player, unitCap)
+    end
+end
+
 -- Utility functions for losing
 
 --- Called when one of the players is killed
