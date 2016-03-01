@@ -45,7 +45,7 @@ local ReallyBeginSession = BeginSession
 function BeginSession()
     ReallyBeginSession()
 
-    # Hide scores for AI's and make them able to place orders outside the playable rect
+    -- Hide scores for AI's and make them able to place orders outside the playable rect
     for i = 1, table.getn(ArmyBrains) do
         if not table.find(ScenarioInfo.HumanPlayers, i) then
             SetArmyShowScore(i, false)
