@@ -23,6 +23,8 @@ local ReallySetupSession = SetupSession
 function SetupSession()
     ReallySetupSession()
 
+    ScenarioInfo.HumanPlayers = {}
+
     -- Erase alliances that refer to armies that we don't have players for.
     -- This shouldn't really be necessary, but things catch fire trying to create alliances to
     -- nonexistent armies otherwise.
