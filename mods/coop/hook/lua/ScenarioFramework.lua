@@ -133,10 +133,6 @@ end
 -- Each map can provide a "REMINDERS" table, each of which can provide reminders for each objective.
 
 function PlayReminder(reminderSpec, index)
-    if ScenarioInfo[reminderSpec.CompletionFlag] then
-        return
-    end
-
     local reminders = reminderSpec.Reminders
 
     -- There may not be any more reminders defined.
@@ -150,6 +146,9 @@ function PlayReminder(reminderSpec, index)
     local nextIndex = index + 1
     local spec = reminderSpec
     local function next()
+        if ScenarioInfo[reminderSpec.CompletionFlag] then
+            return
+        end
         Dialogue(reminder.Dialogue)
         PlayReminder(spec, nextIndex)
     end
