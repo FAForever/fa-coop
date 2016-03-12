@@ -13,12 +13,13 @@ function GetLeaderAndLocalFactions()
 end
 
 --- Remove a unit restriction for all human players.
-function RemoveRestrictionForAllHumans(categories, isSilent)
+function RemoveRestrictionForAllHumans(categories, unlockDialogue, isSilent)
     for k, armyID in ScenarioInfo.HumanPlayers do
         RemoveRestriction(armyID, categories, isSilent)
     end
-
-    PlayUnlockDialogue()
+    if unlockDialogue then
+        PlayUnlockDialogue()
+    end
 end
 
 --- Remove a unit restriction for all human players with associated factional voiceover.
@@ -35,7 +36,7 @@ function UnrestrictWithVoiceover(categories, VOFaction, voiceover, isSilent)
         Dialogue(voiceover)
     end
 
-    RemoveRestrictionForAllHumans(categories, isSilent)
+    RemoveRestrictionForAllHumans(categories, false, isSilent)
 end
 
 --- Remove a unit restriction for all human players with associated factional voiceover and delay
