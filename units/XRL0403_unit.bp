@@ -1,0 +1,22 @@
+UnitBlueprint {
+    Merge=true,
+    BlueprintId="xrl0403",
+    Display = {
+        Mesh = {
+            LODs = {
+            {
+                LODCutoff = 200,
+                MeshName = '/units/xrl0404/xrl0404_mt_lod0.scm',
+                ShaderName = 'Insect',
+            },
+            {
+                AlbedoName = 'xrl0403_lod1_albedo.dds',
+                LODCutoff = 400,
+                MeshName = '/Units/xrl0404/xrl0404_LOD1.scm',
+                ShaderName = 'Insect',
+                SpecularName = 'xrl0403_lod1_specteam.dds',
+            },
+            },
+        },
+    },
+}
