@@ -2,14 +2,17 @@ local FactionData = import('/lua/factions.lua')
 
 function GetLeaderAndLocalFactions()
     local leaderFactionIndex = GetArmyBrain('Player'):GetFactionIndex()
-    local LeaderFaction = FactionData.Factions[leaderFactionIndex].Key
-    ScenarioInfo.LeaderFaction = LeaderFaction
+    ScenarioInfo.LeaderFaction = FactionData.Factions[leaderFactionIndex].Key
 
-    local localFactionIndex = GetArmyBrain(GetFocusArmy()):GetFactionIndex()
-    local LocalFaction = FactionData.Factions[localFactionIndex].Key
-    ScenarioInfo.LocalFaction = LocalFaction
+    local focusArmy = GetFocusArmy()
+    if focusArmy ~= -1 then
+        local localFactionIndex = GetArmyBrain(focusArmy):GetFactionIndex()
+        ScenarioInfo.LocalFaction = FactionData.Factions[localFactionIndex].Key
+    else
+        ScenarioInfo.LocalFaction = ScenarioInfo.LeaderFaction
+    end
 
-    return LeaderFaction, LocalFaction
+    return ScenarioInfo.LeaderFaction, ScenarioInfo.LocalFaction
 end
 
 --- Remove a unit restriction for all human players.
