@@ -165,3 +165,195 @@ end
 function StartReminders(remindersTable)
     PlayReminder(remindersTable, 1)
 end
+
+function OperationCameraThread(location, heading, faction, track, unit, unlock, time)
+    local cam = import('/lua/simcamera.lua').SimCamera('WorldCamera')
+    LockInput()
+    cam:UseGameClock()
+    WaitTicks(1)
+    -- Track the unit; not totally working properly yet
+    if track and unit then
+        local zoomVar = 50
+        local pitch = .4
+        if EntityCategoryContains( categories.uaa0310, unit ) then
+            zoomVar = 150
+            pitch = .3
+        end
+        local pos = unit:GetPosition()
+        local marker = {
+            orientation = VECTOR3( heading, .5, 0 ),
+            position = { pos[1], pos[2] - 15, pos[3] },
+            zoom = zoomVar,
+        }
+
+        -- cam:SnapToMarker(marker)
+        -- cam:Spin( .03 )
+        cam:NoseCam( unit, pitch, zoomVar, 1 )
+    else
+        -- Only do the 2.5 second wait if a faction is given; that means its a commander
+        if faction then
+            local marker = {
+                orientation = VECTOR3( heading + 3.14149, .2, 0 ),
+                position = { location[1], location[2]+1, location[3] },
+                zoom = FLOAT( 15 ),
+            }
+            cam:SnapToMarker(marker)
+            WaitSeconds(2.5)
+        end
+        if faction == 1 then -- uef
+            marker = {
+                orientation = {heading + 3.14149, .38, 0 },
+                position = { location[1], location[2] + 7.5, location[3] },
+                zoom = 58,
+            }
+        elseif faction == 2 then -- aeon
+            marker = {
+                orientation = VECTOR3( heading + 3.14149, .45, 0 ),
+                position = { location[1], location[2], location[3] },
+                zoom = FLOAT( 50 ),
+            }
+        elseif faction == 3 then -- cybran
+            marker = {
+                orientation = VECTOR3( heading + 3.14149, .45, 0 ),
+                position = { location[1], location[2] + 5, location[3] },
+                zoom = FLOAT( 45 ),
+            }
+        else
+            marker = {
+                orientation = VECTOR3( heading + 3.14149, .38, 0 ),
+                position = location,
+                zoom = 45,
+            }
+        end
+        cam:SnapToMarker(marker)
+        cam:Spin( .03 )
+    end
+    if (unlock) then
+        WaitSeconds(time)
+        -- Matt 11/27/06. This is fuctional now, but the snap is pretty harsh. Need someone else to look at it
+        -- cam:SyncPlayableRect(ScenarioInfo.MapData.PlayableRect)
+        -- local rectangle = ScenarioInfo.MapData.PlayableRect
+        -- import('/lua/SimSync.lua').SyncPlayableRect(  Rect(rectangle[1],rectangle[2],rectangle[3],rectangle[4]) )
+        cam:RevertRotation()
+        -- cam:Reset()
+        UnlockInput()
+    end
+end
+
+function MissionNISCameraThread( unit, blendtime, holdtime, orientationoffset, positionoffset, zoomval )
+    if not ScenarioInfo.NIS then
+        ScenarioInfo.NIS = true
+        local cam = import('/lua/simcamera.lua').SimCamera('WorldCamera')
+        LockInput()
+        cam:UseGameClock()
+        WaitTicks(1)
+
+        local position = unit:GetPosition()
+        local heading = unit:GetHeading()
+        local marker = {
+            orientation = VECTOR3( heading + orientationoffset[1], orientationoffset[2], orientationoffset[3] ),
+            position = { position[1] + positionoffset[1], position[2] + positionoffset[2], position[3] + positionoffset[3] },
+            zoom = FLOAT( zoomval ),
+        }
+        cam:MoveToMarker(marker, blendtime)
+        WaitSeconds(holdtime)
+        cam:RevertRotation()
+        UnlockInput()
+        ScenarioInfo.NIS = false
+    end
+end
+
+function OperationNISCameraThread( unitInfo, camInfo )
+    if not ScenarioInfo.NIS or camInfo.overrideCam then
+        local cam = import('/lua/simcamera.lua').SimCamera('WorldCamera')
+
+        -- Utilities.UserConRequest('UI_RenderIcons false') -- turn strat icons off
+        -- Utilities.UserConRequest('UI_RenderUnitBars false') -- turn lifebars off
+        -- Utilities.UserConRequest('UI_RenResources false') -- turn deposit icons off
+
+        local position, heading, vizmarker
+        -- Setup camera information
+        if camInfo.markerCam then
+            position = unitInfo
+            heading = 0
+        else
+            position = unitInfo.Position
+            heading = unitInfo.Heading
+        end
+
+        ScenarioInfo.NIS = true
+
+        LockInput()
+        cam:UseGameClock()
+        Sync.NISMode = 'on'
+
+        if (camInfo.vizRadius) then
+            local spec = {
+                X = position[1],
+                Z = position[3],
+                Radius = camInfo.vizRadius,
+                LifeTime = -1,
+                Omni = false,
+                Vision = true,
+                Army = 1,
+            }
+            vizmarker = VizMarker(spec)
+            WaitTicks(3) -- this seems to be needed to prevent them from popping in
+        end
+
+        if (camInfo.playableAreaIn) then
+            SetPlayableArea(camInfo.playableAreaIn,false)
+        end
+
+        WaitTicks(1)
+
+        local marker = {
+            orientation = VECTOR3( heading + camInfo.orientationOffset[1], camInfo.orientationOffset[2], camInfo.orientationOffset[3] ),
+            position = { position[1] + camInfo.positionOffset[1], position[2] + camInfo.positionOffset[2], position[3] + camInfo.positionOffset[3] },
+            zoom = FLOAT( camInfo.zoomVal ),
+        }
+
+        -- Run the Camera
+        cam:MoveToMarker( marker, camInfo.blendTime )
+        WaitSeconds( camInfo.blendTime )
+
+        -- Hold camera in place if desired
+        if camInfo.spinSpeed and camInfo.holdTime then
+            cam:HoldRotation()
+        end
+
+        -- Spin the Camera
+        if camInfo.spinSpeed then
+            cam:Spin( camInfo.spinSpeed )
+        end
+
+        -- Release the camera if it's not the end of the Op
+        if camInfo.holdTime then
+            WaitSeconds( camInfo.holdTime )
+            if camInfo.resetCam then
+                cam:Reset()
+            else
+                cam:RevertRotation()
+            end
+            UnlockInput()
+            Sync.NISMode = 'off'
+
+            -- Utilities.UserConRequest('UI_RenderIcons true') -- turn strat icons back on
+            -- Utilities.UserConRequest('UI_RenderUnitBars true') -- turn lifebars back on
+            -- Utilities.UserConRequest('UI_RenResources true') -- turn deposit icons back on
+
+            ScenarioInfo.NIS = false
+            -- Otherwise just unlock input, allowing them to click on the "Ok" button on the "Operation ended" box
+        else
+            UnlockInput()
+        end
+
+        -- cleanup
+        if (camInfo.playableAreaOut) then
+            SetPlayableArea(camInfo.playableAreaOut,false)
+        end
+        if (vizmarker) then
+            vizmarker:Destroy()
+        end
+    end
+end
