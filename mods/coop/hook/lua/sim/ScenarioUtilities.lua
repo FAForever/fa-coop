@@ -1,3 +1,7 @@
+-- Ignore unit restrictions in all functions that are spawning units
+
+local ScenarioFramework = import('/lua/ScenarioFramework.lua')
+
 ----[  CreateArmyUnit                                                             ]--
 ----[                                                                             ]--
 ----[  Creates a named unit in an army.                                           ]--
@@ -7,6 +11,7 @@ function CreateArmyUnit(strArmy,strUnit)
     if not brain.IgnoreArmyCaps then
         SetIgnoreArmyUnitCap(brain:GetArmyIndex(), true)
     end
+    ScenarioFramework.IgnoreRestrictions(true)
     if nil ~= tblUnit then
         local unit = CreateUnitHPR(
             tblUnit.type,
@@ -37,11 +42,13 @@ function CreateArmyUnit(strArmy,strUnit)
         if not brain.IgnoreArmyCaps then
             SetIgnoreArmyUnitCap(brain:GetArmyIndex(), false)
         end
+        ScenarioFramework.IgnoreRestrictions(false)
         return unit, platoon, tblUnit.platoon
     end
     if not brain.IgnoreArmyCaps then
         SetIgnoreArmyUnitCap(brain:GetArmyIndex(), false)
     end
+    ScenarioFramework.IgnoreRestrictions(false)
     return nil
 end
 
@@ -57,6 +64,7 @@ function CreateArmySubGroup(strArmy,strGroup,...)
     if not brain.IgnoreArmyCaps then
         SetIgnoreArmyUnitCap(brain:GetArmyIndex(), true)
     end
+    ScenarioFramework.IgnoreRestrictions(true)
     for strName, tblData in pairs(tblNode.Units) do
         if 'GROUP' == tblData.type then
             if strName == strGroup then
@@ -71,6 +79,7 @@ function CreateArmySubGroup(strArmy,strGroup,...)
     if not brain.IgnoreArmyCaps then
         SetIgnoreArmyUnitCap(brain:GetArmyIndex(), false)
     end
+    ScenarioFramework.IgnoreRestrictions(false)
     if tblResult == nil then
         error('SCENARIO UTILITIES WARNING: No units found for for Army- ' .. strArmy .. ' Group- ' .. strGroup, 2)
     end
@@ -90,6 +99,7 @@ function SpawnPlatoon( strArmy, strGroup )
     if not brain.IgnoreArmyCaps then
         SetIgnoreArmyUnitCap(brain:GetArmyIndex(), true)
     end
+    ScenarioFramework.IgnoreRestrictions(true)
     local platoonName
     if nil ~= tblNode.platoon and '' ~= tblNode.platoon then
         platoonName = tblNode.platoon
@@ -99,6 +109,7 @@ function SpawnPlatoon( strArmy, strGroup )
     if not brain.IgnoreArmyCaps then
         SetIgnoreArmyUnitCap(brain:GetArmyIndex(), false)
     end
+    ScenarioFramework.IgnoreRestrictions(false)
     if tblResult == nil then
         error('SCENARIO UTILITIES WARNING: No units found for for Army- ' .. strArmy .. ' Group- ' .. strGroup, 2)
     end
@@ -110,11 +121,13 @@ function SpawnTableOfPlatoons( strArmy, strGroup )
     if not brain.IgnoreArmyCaps then
         SetIgnoreArmyUnitCap(brain:GetArmyIndex(), true)
     end
+    ScenarioFramework.IgnoreRestrictions(true)
     local platoonList, tblResult, treeResult = CreatePlatoons(strArmy,
                                                               FindUnitGroup( strGroup, Scenario.Armies[strArmy].Units))
     if not brain.IgnoreArmyCaps then
         SetIgnoreArmyUnitCap(brain:GetArmyIndex(), false)
     end
+    ScenarioFramework.IgnoreRestrictions(false)
     if tblResult == nil then
         error('SCENARIO UTILITIES WARNING: No units found for for Army- ' .. strArmy .. ' Group- ' .. strGroup, 2)
     end
@@ -129,12 +142,14 @@ function CreateArmyGroup(strArmy,strGroup,wreckage, balance)
     if not brain.IgnoreArmyCaps then
         SetIgnoreArmyUnitCap(brain:GetArmyIndex(), true)
     end
+    ScenarioFramework.IgnoreRestrictions(true)
     local platoonList, tblResult, treeResult = CreatePlatoons(strArmy,
                                                               FindUnitGroup( strGroup, Scenario.Armies[strArmy].Units ), nil, nil, nil, nil, balance )
 
     if not brain.IgnoreArmyCaps then
         SetIgnoreArmyUnitCap(brain:GetArmyIndex(), false)
     end
+    ScenarioFramework.IgnoreRestrictions(false)
     if tblResult == nil and strGroup ~= 'INITIAL' then
         error('SCENARIO UTILITIES WARNING: No units found for for Army- ' .. strArmy .. ' Group- ' .. strGroup, 2)
     end
@@ -156,11 +171,13 @@ function CreateArmyTree(strArmy, strGroup)
     if not brain.IgnoreArmyCaps then
         SetIgnoreArmyUnitCap(brain:GetArmyIndex(), true)
     end
+    ScenarioFramework.IgnoreRestrictions(true)
     local platoonList, tblResult, treeResult = CreatePlatoons(strArmy,
                                                               FindUnitGroup(strGroup, Scenario.Armies[strArmy].Units) )
     if not brain.IgnoreArmyCaps then
         SetIgnoreArmyUnitCap(brain:GetArmyIndex(), false)
     end
+    ScenarioFramework.IgnoreRestrictions(false)
     if tblResult == nil then
         error('SCENARIO UTILITIES WARNING: No units found for for Army- ' .. strArmy .. ' Group- ' .. strGroup, 2)
     end
@@ -188,6 +205,7 @@ function CreateArmyGroupAsPlatoon(strArmy, strGroup, formation, tblNode, platoon
     if not brain.IgnoreArmyCaps then
         SetIgnoreArmyUnitCap(brain:GetArmyIndex(), true)
     end
+    ScenarioFramework.IgnoreRestrictions(true)
     local platoon = platoon or brain:MakePlatoon('','')
     local armyIndex = brain:GetArmyIndex()
 
@@ -198,6 +216,7 @@ function CreateArmyGroupAsPlatoon(strArmy, strGroup, formation, tblNode, platoon
             if not brain.IgnoreArmyCaps then
                 SetIgnoreArmyUnitCap(brain:GetArmyIndex(), true)
             end
+            ScenarioFramework.IgnoreRestrictions(false)
         else
             unit = CreateUnitHPR( tblData.type,
                                  strArmy,
@@ -226,5 +245,6 @@ function CreateArmyGroupAsPlatoon(strArmy, strGroup, formation, tblNode, platoon
     if not brain.IgnoreArmyCaps then
         SetIgnoreArmyUnitCap(brain:GetArmyIndex(), false)
     end
+    ScenarioFramework.IgnoreRestrictions(false)
     return platoon
 end
