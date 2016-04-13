@@ -165,3 +165,15 @@ end
 function StartReminders(remindersTable)
     PlayReminder(remindersTable, 1)
 end
+
+function GiveUnitToArmy( unit, newArmyIndex )
+    -- We need the brain to ignore army cap when transferring the unit
+    -- do all necessary steps to set brain to ignore, then un-ignore if necessary the unit cap
+    local newBrain = ArmyBrains[newArmyIndex]
+    SetIgnoreArmyUnitCap(newArmyIndex, true)
+    local newUnit = ChangeUnitArmy(unit, newArmyIndex)
+    if not newBrain.IgnoreArmyCaps then
+        SetIgnoreArmyUnitCap(newArmyIndex, false)
+    end
+    return newUnit
+end
