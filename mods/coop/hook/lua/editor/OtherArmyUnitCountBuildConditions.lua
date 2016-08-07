@@ -167,6 +167,48 @@ function BrainLessThanOrEqualNumCategory( aiBrain, targetBrain, numReq, category
     end
 end
 
+function BrainsCompareNumCategory( airBrain, targetBrains, numReq, category, compareType )
+    local numUnits = 0
+
+    if targetBrains[1] == 'HumanPlayers' then
+        targetBrains = {}
+
+        local tblArmy = ListArmies()
+        for iArmy, strArmy in pairs(tblArmy) do
+            if ScenarioInfo.ArmySetup[strArmy].Human then
+                table.insert(targetBrains, ScenarioInfo.ArmySetup[strArmy].ArmyName)
+            end
+        end
+    end
+
+    for _, brain in targetBrains do
+        for _,testBrain in ArmyBrains do
+            if testBrain.Name == brain then
+                numUnits = numUnits + testBrain:GetCurrentUnits(category)
+            end
+        end
+    end
+
+    if compareType == '>=' then
+        if numUnits >= numReq then
+            return true
+        end
+    elseif compareType == '<=' then
+        if numUnits <= numReq then
+            return true
+        end
+    elseif compareType == '>' then
+        if numUnits > numReq then
+            return true
+        end
+    elseif compareType == '<' then
+        if numUnits < numReq then
+            return true
+        end
+    end
+    return false
+end
+
 --#############################################################################################################
 -- function: FocusBrainBeingBuiltOrActiveCategoryCompare = BuildCondition   doc = "Please work function docs."
 --
