@@ -77,21 +77,18 @@ end
 -- @param failureDialogue A VO to play explaining how much of a failure you are (if any).
 -- @param currentObjectives The AssignedObjectives from the map.
 function PlayerDeath(deadCommander, failureDialogue, currentObjectives)
-    if ScenarioInfo.OpEnded or ScenarioInfo.OperationEnding then
+    if ScenarioInfo.OpEnded then
         return
     end
-    ScenarioInfo.OperationEnding = true
 
     CDRDeathNISCamera(deadCommander)
     EndOperationSafety()
 
-    local objectives = currentObjectives
     local continuation = function()
         ForkThread(
             function()
                 WaitSeconds(1)
-                UnlockInput()
-                PlayerLose(nil, objectives)
+                PlayerLose(nil, currentObjectives, true)
             end
         )
     end
@@ -105,12 +102,16 @@ function PlayerDeath(deadCommander, failureDialogue, currentObjectives)
     end
 end
 
-function PlayerLose(dialogue, currentObjectives)
-    if ScenarioInfo.OpEnded then
-        return
+function PlayerLose(dialogue, currentObjectives, check)
+    -- If we get here from PlayerDeath then just end the mission
+    if not check then
+        if ScenarioInfo.OpEnded then
+            return
+        end
+
+        EndOperationSafety()
     end
 
-    EndOperationSafety()
     ScenarioInfo.OpComplete = false
     if currentObjectives then
         for k, v in currentObjectives do
@@ -122,6 +123,7 @@ function PlayerLose(dialogue, currentObjectives)
 
     -- Wait for any failure dialogue before exiting.
     local terminateMission = function()
+        UnlockInput()
         EndOperation(ScenarioInfo.OpComplete, ScenarioInfo.OpComplete, false)
     end
 
