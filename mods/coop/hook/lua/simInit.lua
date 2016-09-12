@@ -1,18 +1,9 @@
-local MapUtil = import('/lua/ui/maputil.lua')
-
--- The "imaginary" armies we synthesise for the coop players.
-local imaginaryArmyList = MapUtil.GetArmies()
-local imaginaryArmySet = {}
-for k, v in imaginaryArmyList do
-    imaginaryArmySet[v] = true
-end
-
 local ReallyOnCreateArmyBrain = OnCreateArmyBrain
 function OnCreateArmyBrain(index, brain, name, nickname)
     ReallyOnCreateArmyBrain(index, brain, name, nickname)
 
     -- Stuff this army into the HumanPlayers set, if applicable.
-    if imaginaryArmySet[name] then
+    if StringStartsWith(ArmyBrains[index].Name, "Player") then
         table.insert(ScenarioInfo.HumanPlayers, index)
     end
 end
