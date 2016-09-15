@@ -169,19 +169,22 @@ end
 
 function BrainsCompareNumCategory( airBrain, targetBrains, numReq, category, compareType )
     local numUnits = 0
-
-    if targetBrains[1] == 'HumanPlayers' then
-        targetBrains = {}
-
-        local tblArmy = ListArmies()
-        for iArmy, strArmy in pairs(tblArmy) do
-            if ScenarioInfo.ArmySetup[strArmy].Human then
-                table.insert(targetBrains, ScenarioInfo.ArmySetup[strArmy].ArmyName)
+    
+    local targetBrainSet = {}
+    for _,brain in targetBrains do
+        if brain == 'HumanPlayers' then        
+            local tblArmy = ListArmies()
+            for _, strArmy in pairs(tblArmy) do
+                if ScenarioInfo.ArmySetup[strArmy].Human then
+                    targetBrainSet[ScenarioInfo.ArmySetup[strArmy].ArmyName] = true
+                end
             end
+        else
+            targetBrainSet[brain] = true
         end
     end
 
-    for _, brain in targetBrains do
+    for brain,_ in targetBrainSet do
         for _,testBrain in ArmyBrains do
             if testBrain.Name == brain then
                 numUnits = numUnits + testBrain:GetCurrentUnits(category)
