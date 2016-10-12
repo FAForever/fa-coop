@@ -182,3 +182,38 @@ function GiveUnitToArmy( unit, newArmyIndex )
     IgnoreRestrictions(false)
     return newUnit
 end
+
+-- return number of <cat> of all human players, in <area> if specified
+function GetNumOfHumanUnits(cat, area)
+    return table.getn(GetListOfHumanUnits(cat, area))
+end
+
+-- return list of <cat> of all human players, in <area> if specified
+function GetListOfHumanUnits(cat, area)
+    local result = {}
+
+    if area then
+        if type(area) == 'string' then
+            area = ScenarioUtils.AreaToRect(area)
+        end
+
+        local entities = GetUnitsInRect(area)
+
+        if entities then
+            local filteredList = EntityCategoryFilterDown(cat, entities)
+
+            for _, unit in filteredList do
+                for _, player in ScenarioInfo.HumanPlayers do
+                    if(unit:GetAIBrain() == ArmyBrain[player]) then
+                        table.insert(result, unit)
+                    end
+                end
+            end
+        end
+    else
+        for _, player in ScenarioInfo.HumanPlayers do
+            result = table.cat(result, ArmyBrains[player]:GetListOfUnits(cat, false))
+        end
+    end
+    return result
+end
