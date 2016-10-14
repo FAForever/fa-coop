@@ -1,7 +1,7 @@
 local FactionData = import('/lua/factions.lua')
 
 function GetLeaderAndLocalFactions()
-    local leaderFactionIndex = GetArmyBrain('Player'):GetFactionIndex()
+    local leaderFactionIndex = GetArmyBrain('Player1'):GetFactionIndex()
     ScenarioInfo.LeaderFaction = FactionData.Factions[leaderFactionIndex].Key
 
     local focusArmy = GetFocusArmy()
