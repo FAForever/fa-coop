@@ -1,9 +1,28 @@
---- Return a fixed army set for coop games. Keep the old function available as we need it at
+--- Return all players' armies. Keep the old function available as we need it at
 -- launch-time.
 ReallyGetArmies = GetArmies
-
 function GetArmies(scenario)
-    return {"Player", "Coop1", "Coop2", "Coop3"}
+    local retArmies = {}
+
+    if scenario.Configurations.standard and scenario.Configurations.standard.teams then
+        -- find the "FFA" team
+        for index, teamConfig in scenario.Configurations.standard.teams do
+            if teamConfig.name and (teamConfig.name == 'FFA') then
+                for _, army in teamConfig.armies do
+                    if StringStartsWith(army, "Player") then
+                        table.insert(retArmies, army)
+                    end
+                end
+            end
+            break
+        end
+    end
+
+    if table.getn(retArmies) == 0 then
+        WARN("No starting armies defined in " .. scenario.file)
+    end
+
+    return retArmies
 end
 
 -- Make the map list show coop scenarios (only)
@@ -39,7 +58,7 @@ function GetStartPositions(scenario)
     doscript(scenario.save, saveData)
  
     local armyPositions = {}
-    local armiesOfInterest = GetArmies()
+    local armiesOfInterest = GetArmies(scenario)
     for k, armyName in armiesOfInterest do
         local armyTable = saveData.Scenario.Armies[armyName]
         armyPositions[armyName] = {0, 0}
