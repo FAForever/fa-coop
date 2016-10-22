@@ -169,16 +169,10 @@ function StartReminders(remindersTable)
 end
 
 -- Ignore unit restrictions as well when transferring units
-function GiveUnitToArmy( unit, newArmyIndex )
-    -- We need the brain to ignore army cap and restrictions when transferring the unit
-    -- do all necessary steps to set brain to ignore, then un-ignore if necessary the unit cap
-    local newBrain = ArmyBrains[newArmyIndex]
-    SetIgnoreArmyUnitCap(newArmyIndex, true)
+local oldGiveUnitToArmy = GiveUnitToArmy
+function GiveUnitToArmy( unit, newArmyIndex, triggerOnGiven )
     IgnoreRestrictions(true)
-    local newUnit = ChangeUnitArmy(unit, newArmyIndex)
-    if not newBrain.IgnoreArmyCaps then
-        SetIgnoreArmyUnitCap(newArmyIndex, false)
-    end
+    local newUnit = oldGiveUnitToArmy(unit, newArmyIndex, triggerOnGiven)
     IgnoreRestrictions(false)
     return newUnit
 end
