@@ -217,3 +217,8 @@ function GetListOfHumanUnits(cat, area)
     end
     return result
 end
+
+-- UI announcement for players, <secondaryText> is optional
+function SimAnnouncement(text, secondaryText)
+    Sync.CreateSimAnnouncement = {text = text, secondaryText = secondaryText}
+end
