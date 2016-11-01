@@ -96,7 +96,7 @@ end
 -- name -> ???
 ---- Returns: nothing
 function ThreatTriggerAroundUnitThread(callbackFunction, aiBrains, unit, rings, onceOnly, value, greater, name)
-    ThreatTriggerAtPositionLoop(callbackFunction, (function() return unit:IsDead() end), (function() return unit:GetPosition() end), aiBrains, rings, onceOnly, value, greater, name)
+    ThreatTriggerAtPositionLoop(callbackFunction, (function() return not unit:IsDead() end), (function() return unit:GetPosition() end), aiBrains, rings, onceOnly, value, greater, name)
 end
 
 ----- Threadfunction that runs the callbackFunction when atleast 1 of the armies in aiBrains has a threat level around position that is high/low enough
@@ -230,7 +230,7 @@ function ConvertAIBrains(aiBrains, asArmyBrain)
     if asArmyBrain then
         local aiBrainsNamelist = brainsList
         brainsList = {}
-        for _,aiBrainName in list do
+        for _,aiBrainName in aiBrainsNamelist do
             for _,army in ArmyBrains do
                 if aiBrainName == army.Name then
                     table.insert(brainsList,army)
