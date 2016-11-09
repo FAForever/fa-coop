@@ -59,24 +59,20 @@ function GetStartPositions(scenario)
  
     local armyPositions = {}
     local armiesOfInterest = GetArmies(scenario)
-    for k, armyName in armiesOfInterest do
-        local armyTable = saveData.Scenario.Armies[armyName]
-        armyPositions[armyName] = {0, 0}
-        GetStartPositionsRecursively(armyName, armyPositions, armyTable)
-    end
-    return armyPositions
-end
- 
-function GetStartPositionsRecursively(armyName, armyPositions, t)
-    if( type(t) == 'table') then
-        for i, v in t or {} do
-            GetStartPositionsRecursively(armyName, armyPositions, v)
-        end
- 
-        if not (t["type"] == nil) then
-            if(string.find(t["type"], "..l0001")) then
-                armyPositions[armyName] = {t.Position[1], t.Position[3]}
+    if table.getsize(armiesOfInterest) > 0 then
+        for _,army in armiesOfInterest do
+            if saveData.Scenario.MasterChain['_MASTERCHAIN_'].Markers[army] then
+                pos = saveData.Scenario.MasterChain['_MASTERCHAIN_'].Markers[army].position
+                -- x and z value are of interest so ignore y (index 2)
+                armyPositions[army] = { pos[1], pos[3] }
+            else
+                WARN("No initial position marker for army " .. army .. " found in " .. scenario.save)
+                armyPositions[army] = { 0, 0 }
             end
         end
+    else
+        WARN("No start positions defined in " .. scenario.file)
     end
+    
+    return armyPositions
 end
