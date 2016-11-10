@@ -204,7 +204,7 @@ function GetListOfHumanUnits(cat, area)
 
             for _, unit in filteredList do
                 for _, player in ScenarioInfo.HumanPlayers do
-                    if(unit:GetAIBrain() == ArmyBrain[player]) then
+                    if(unit:GetAIBrain() == ArmyBrains[player]) then
                         table.insert(result, unit)
                     end
                 end
