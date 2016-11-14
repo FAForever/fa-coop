@@ -1,5 +1,12 @@
 # Changelog
 
+## v47 (November 14th, 2016)
+- Game lobby now uses markers instead of ACUs to determine the starting positions on the map preview. It should load all maps faster when entering the lobby.
+- Fixed typo causing some attacks not work.
+
+### Contributors
+- KeyBlue
+
 ## v46 (November 2nd, 2016)
 - Added support for any number of players (no mission uses more than 4 yet).
 - Added support for displaying announcements to the players.
