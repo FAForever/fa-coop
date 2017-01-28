@@ -110,6 +110,66 @@ teamLockOption.values = {
     }
 }
 
+-- Unit cap is controlled by mission script
+local unitCapOption = getOption("UnitCap", globalOpts)
+unitCapOption.default = 1
+unitCapOption.values = {'1000'}
+
+-- No civilians to reveal
+local revealCivilianOption = getOption("RevealCivilians", globalOpts)
+revealCivilianOption.default = 1
+revealCivilianOption.values = {
+    {
+        text = "<LOC _No>No",
+        help = "<LOC lobui_0303>Civilian structures are hidden",
+        key = 'No',
+    }
+}
+
+-- Enable score
+local scoreOption = getOption("Score", globalOpts)
+scoreOption.default = 1
+scoreOption.values = {
+    {
+        text = "<LOC _On>On",
+        help = "<LOC lobui_0729>Score is enabled",
+        key = 'yes',
+    }
+}
+
+-- Share until death
+local shareOption = getOption("Share", globalOpts)
+shareOption.default = 1
+shareOption.values = {
+    {
+        text = "<LOC lobui_0744>Share Until Death",
+        help = "<LOC lobui_0745>All units you have built this game will be destroyed when you die, except those captured by the enemy.",
+        key = 'ShareUntilDeath',
+    }
+}
+
+-- Share unit cap
+local shareUnitCapOption = getOption("ShareUnitCap", globalOpts)
+shareUnitCapOption.default = 1
+shareUnitCapOption.values = {
+    {
+        text = "<LOC lobui_0438>Allies",
+        help = "<LOC lobui_0439>Share unitcap with allies only",
+        key = 'allies',
+    }
+}
+
+-- Share unit cap
+local timeoutsOption = getOption("Timeouts", globalOpts)
+timeoutsOption.default = 1
+timeoutsOption.values = {
+    {
+        text = "<LOC lobui_0248>Infinite",
+        help = "<LOC lobui_0249>There is no limit on timeouts",
+        key = '-1',
+    }
+}
+
 -- Add the "Difficulty" option.
 table.insert(globalOpts,
     {
