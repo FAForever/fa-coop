@@ -22,11 +22,9 @@ function SetupSession()
     for k, army in Scenario.Armies do
         if army.Alliances then
             local newAlliances = {}
-            for allianceeName, allianceType in army.Alliances do
-                if ScenarioInfo.ArmySetup[allianceeName] then
-                    newAlliances[allianceeName] = allianceType
-                else
-                    WARN("Dropping alliance from " .. k .. " to " .. allianceeName .. " of type " .. allianceType)
+            for aName, aType in army.Alliances do
+                if ScenarioInfo.ArmySetup[aName] then
+                    newAlliances[aName] = aType
                 end
             end
             army.Alliances = newAlliances
