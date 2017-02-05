@@ -168,15 +168,6 @@ function StartReminders(remindersTable)
     PlayReminder(remindersTable, 1)
 end
 
--- Ignore unit restrictions as well when transferring units
-local oldGiveUnitToArmy = GiveUnitToArmy
-function GiveUnitToArmy( unit, newArmyIndex, triggerOnGiven )
-    IgnoreRestrictions(true)
-    local newUnit = oldGiveUnitToArmy(unit, newArmyIndex, triggerOnGiven)
-    IgnoreRestrictions(false)
-    return newUnit
-end
-
 -- return number of <cat> of all human players, in <area> if specified
 function GetNumOfHumanUnits(cat, area)
     return table.getn(GetListOfHumanUnits(cat, area))
