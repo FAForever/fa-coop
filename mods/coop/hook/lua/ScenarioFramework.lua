@@ -15,6 +15,13 @@ function GetLeaderAndLocalFactions()
     return ScenarioInfo.LeaderFaction, ScenarioInfo.LocalFaction
 end
 
+--- Add a unit restriction for all human players.
+function AddRestrictionForAllHumans(categories)
+    for _, armyID in ScenarioInfo.HumanPlayers do
+        AddRestriction(armyID, categories)
+    end
+end
+
 --- Remove a unit restriction for all human players.
 function RemoveRestrictionForAllHumans(categories, unlockDialogue, isSilent)
     for k, armyID in ScenarioInfo.HumanPlayers do
