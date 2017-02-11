@@ -1,5 +1,13 @@
 # Changelog
 
+## v48 (February 11th, 2017)
+- Removed unnecessary options from the lobby.
+- Small code improvements
+
+### Contributors
+- KeyBlue
+- speed2
+
 ## v47 (November 14th, 2016)
 - Game lobby now uses markers instead of ACUs to determine the starting positions on the map preview. It should load all maps faster when entering the lobby.
 - Fixed typo causing some attacks not work.
