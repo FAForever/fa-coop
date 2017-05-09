@@ -1,5 +1,14 @@
 # Changelog
 
+## v49 (Upcoming)
+- Seraphim Destroyers on initial patrols will surface now.
+- Added a button into the menu to open a transmission log (contains all played VOs).
+- Lobby defaults on the first FA mission if the last scenario is invalid (for mission developers).
+
+### Contributors
+- Keyblue
+- speed2
+
 ## v48 (February 11th, 2017)
 - Removed unnecessary options from the lobby.
 - Small code improvements
