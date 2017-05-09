@@ -4,6 +4,7 @@
 - Seraphim Destroyers on initial patrols will surface now.
 - Added a button into the menu to open a transmission log (contains all played VOs).
 - Lobby defaults on the first FA mission if the last scenario is invalid (for mission developers).
+- Added translations of vanilla missions.
 
 ### Contributors
 - Keyblue
