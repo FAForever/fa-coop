@@ -1,10 +1,28 @@
 # Changelog
 
-## v49 (Upcoming)
+## v49 (May 14th, 2017)
 - Seraphim Destroyers on initial patrols will surface now.
 - Added a button into the menu to open a transmission log (contains all played VOs).
 - Lobby defaults on the first FA mission if the last scenario is invalid (for mission developers).
 - Added translations of vanilla missions.
+
+- Voices from vanilla missions got compressed to 1/4 of their original size.
+- Added movies to the vanilla missions. This fixes the desync when some players didn't have linked vanilla supcom.
+
+### Improvements integrated in FAF patch
+- Fixes desync during mid game cinematics (camera on a dying ACU or a killed base).
+- Added new objective type: bonus. Bonus objectives will get added into all missions, they will be hidden until completed.
+- Later completing bonus objectives will unlock achievements.
+- Scenario info now works and shows objective overview. https://puu.sh/vOE0s/1ce1d52f41.png
+- Added transmission log. https://puu.sh/vODZm/53b53c487d.png
+- Both can be accessed via main menu. https://puu.sh/vODVM/dfdf861169.png
+- Objectives on the score screen now have a tooltip with their description.
+- Captured units no longer disappear.
+- Restricted units can be repaired now.
+- Objective tooltip now changes colour according to the theme the player is using.
+- Ally nuke pings are no longer displayed during cinematics.
+- Fixes some AI templates.
+- Kill or Capture objective has it's own icon now. https://puu.sh/vtw2X/5fc2f020d7.png
 
 ### Contributors
 - Keyblue
