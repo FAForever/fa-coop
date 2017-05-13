@@ -150,7 +150,7 @@ mount_dir_with_whitelist(InitFileDir .. '\\..\\gamedata\\', '*.nx2', '/')
 
 mount_dir_with_whitelist(fa_path .. '\\gamedata\\', '*.scd', '/')
 mount_dir(fa_path, '/')
-mount_dir(sc_path .. '\\movies', '/movies')
+mount_dir(InitFileDir .. '\\..\\movies', '/movies')
 
 mount_dir_with_glob(InitFileDir .. '\\..\\gamedata\\', '*_VO.nx2', '/')
 
