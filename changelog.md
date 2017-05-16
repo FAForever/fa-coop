@@ -1,5 +1,12 @@
 # Changelog
 
+## v50 (May 17th, 2017)
+- Fixed mixes dialogue cues in UEF and Cybran campaigns.
+
+### Contributors
+- ExoticRetard
+- speed2
+
 ## v49 (May 14th, 2017)
 - Seraphim Destroyers on initial patrols will surface now.
 - Added a button into the menu to open a transmission log (contains all played VOs).
