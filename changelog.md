@@ -1,5 +1,17 @@
 # Changelog
 
+## v51 (August 15th, 2017)
+- Fixed more mixes dialogues.
+- Added support for naval rally points to be used.
+
+### Improvements integrated in FAF patch
+- Added a new way of creating naval attacks for future use.
+- Added several new land platoons for AI.
+- Bonus objectives are now properly hidden.
+- Fixed code for making player's units not take damage during cinematics to affect all human players.
+- Added better control of AIs platoon sizes to allow more variety in attacks.
+- Base manager can now operate with TMLs.
+
 ## v50 (May 17th, 2017)
 - Fixed mixes dialogue cues in UEF and Cybran campaigns.
 
