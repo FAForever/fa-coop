@@ -229,3 +229,85 @@ end
 function SimAnnouncement(text, secondaryText)
     Sync.CreateSimAnnouncement = {text = text, secondaryText = secondaryText}
 end
+
+-- Functions for randomly picking scenarios during the mission
+function ChooseRandomBases()
+    local data = ScenarioInfo.OperationScenarios['M' .. ScenarioInfo.MissionNumber].Bases
+
+    if not ScenarioInfo.MissionNumber then
+        error('*RANDOM BASE: ScenarioInfo.MissionNumber needs to be set.')
+    elseif not data then
+        error('*RANDOM BASE: No bases specified for mission number: ' .. ScenarioInfo.MissionNumber)
+    end
+
+    for _, base in data do
+        local num = Random(1, table.getn(base.Types))
+
+        base.CallFunction(base.Types[num])
+    end
+end
+
+function ChooseRandomEvent(useDelay, customDelay)
+    local data = ScenarioInfo.OperationScenarios['M' .. ScenarioInfo.MissionNumber].Events
+    local num = ScenarioInfo.MissionNumber
+
+    if not num then
+        error('*RANDOM EVENT: ScenarioInfo.MissionNumber needs to be set.')
+    elseif not data then
+        error('*RANDOM EVENT: No events specified for mission number: ' .. num)
+    end
+    
+    -- Randomly pick one event
+    local function PickEvent(tblEvents)
+        local availableEvents = {}
+        local event
+
+        -- Check available events
+        for _, event in tblEvents do
+            if not event.Used then
+                table.insert(availableEvents, event)
+            end
+        end
+
+        -- Pick one, mark as used
+        local num = table.getn(availableEvents)
+
+        if num ~= 0 then
+            local event = availableEvents[Random(1, num)]
+            event.Used = true
+
+            return event
+        else
+            -- Reset availability and try to pick again
+            for _, event in tblEvents do
+                event.Used = false
+            end
+            
+            return PickEvent(tblEvents)
+        end
+    end
+
+    local event = PickEvent(data)
+
+    ForkThread(StartEvent, event, num, useDelay, customDelay)
+end
+
+function StartEvent(event, missionNumber, useDelay, customDelay)
+    if useDelay or useDelay == nil then
+        local waitTime = customDelay or event.Delay -- Delay passed as a function parametr can over ride the delay from the OperationScenarios table
+        local Difficulty = ScenarioInfo.Options.Difficulty
+
+        if type(waitTime) == 'table' then
+            WaitSeconds(waitTime[Difficulty])
+        else
+            WaitSeconds(waitTime)
+        end
+    end
+
+    -- Check if the mission didn't end while we were waiting
+    if ScenarioInfo.MissionNumber ~= missionNumber then
+        return
+    end
+
+    event.CallFunction()
+end
