@@ -32,6 +32,21 @@ function RemoveRestrictionForAllHumans(categories, unlockDialogue, isSilent)
     end
 end
 
+--- Refresh build restriction of factories and engineers
+-- When spawning base the HQ factories might not be spawned first causing support factories and engineers not being able to build things they should.
+function RefreshRestrictions(brain)
+    if type(brain) == 'string' then
+        brain = GetArmyBrain(brain)
+    elseif type(brain) == 'number' then
+        brain = ArmyBrains[brain]
+    end
+
+    local units = brain:GetListOfUnits(categories.FACTORY + categories.ENGINEER, false)
+    for _, v in units do
+        v:updateBuildRestrictions()
+    end
+end
+
 --- Remove a unit restriction for all human players with associated factional voiceover.
 --
 -- If the local player is of faction VOFaction, play voiceover then unlock the unit identified by
