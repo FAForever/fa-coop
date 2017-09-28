@@ -1,5 +1,13 @@
 # Changelog
 
+## v52 (September 28th, 2017)
+- Fixed syntax error in mod_info.lua.
+- Added helper fuctions for random events and refreshing unit restrictions.
+
+### Contributors
+- Downlord
+- speed2
+
 ## v51 (August 15th, 2017)
 - Fixed more mixes dialogues.
 - Added support for naval rally points to be used.
