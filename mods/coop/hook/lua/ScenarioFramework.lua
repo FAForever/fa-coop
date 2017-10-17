@@ -145,8 +145,7 @@ function PlayerLose(dialogue, currentObjectives, check)
 
     -- Wait for any failure dialogue before exiting.
     local terminateMission = function()
-        UnlockInput()
-        EndOperation(ScenarioInfo.OpComplete, ScenarioInfo.OpComplete, false)
+        EndOperation(ScenarioInfo.OpComplete, ScenarioInfo.OpComplete, false, false)
     end
 
     if dialogue then
