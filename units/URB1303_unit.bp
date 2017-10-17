@@ -2,13 +2,6 @@ UnitBlueprint {
     Merge=true,
     BlueprintId="urb1303",
     Economy = {
-        BuildCostEnergy = 65000,
-        BuildCostMass = 3000,
-        BuildTime = 4988,
         MaintenanceConsumptionPerSecondEnergy = 1000,
-        ProductionPerSecondMass = 12,
-        RebuildBonusIds = {
-            'urb1303',
-        },
     },
 }
