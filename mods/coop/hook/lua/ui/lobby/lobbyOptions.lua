@@ -137,14 +137,14 @@ scoreOption.values = {
     }
 }
 
--- Share until death
+-- Full Share
 local shareOption = getOption("Share", globalOpts)
 shareOption.default = 1
 shareOption.values = {
     {
-        text = "<LOC lobui_0744>Share Until Death",
-        help = "<LOC lobui_0745>All units you have built this game will be destroyed when you die, except those captured by the enemy.",
-        key = 'ShareUntilDeath',
+        text = "<LOC lobui_0742>Full Share",
+        help = "<LOC lobui_0743>Your units will be transferred to your highest scoring ally when you die. Previously transferred units will stay where they are.",
+        key = 'FullShare',
     }
 }
 
