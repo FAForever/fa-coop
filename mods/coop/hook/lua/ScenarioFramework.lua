@@ -85,9 +85,28 @@ end
 
 -- Sets unit capacity depending on number of the players
 function SetSharedUnitCap(number)
-    local unitCap = number / table.getn(ScenarioInfo.HumanPlayers)
-    for _, player in ScenarioInfo.HumanPlayers do
-        SetArmyUnitCap(player, unitCap)
+    -- Find out how many players are still alive
+    local aliveCount = 0
+    local alive = {}
+    for _, index in ScenarioInfo.HumanPlayers do
+        if not ArmyBrains[index]:IsDefeated() then
+            aliveCount = aliveCount + 1
+            table.insert(alive, index)
+        end
+    end
+
+    -- Distribute the new unit cap among alive players
+    if aliveCount > 0 then
+        local totalCap = number
+        if not totalCap or totalCap == 0 then
+            local currentCap = GetArmyUnitCap(alive[1])
+            totalCap = (aliveCount + 1) * currentCap
+        end
+
+        local newCap = math.floor(totalCap / aliveCount)
+        for _, index in alive do
+            SetArmyUnitCap(index, newCap)
+        end
     end
 end
 
