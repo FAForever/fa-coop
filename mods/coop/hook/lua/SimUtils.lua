@@ -13,7 +13,7 @@ end
 
 --- Update unit cap only for human players
 function UpdateUnitCap(deadArmy)
-    if not ArmyBrains[deadArmy].Human then return end
+    if ArmyBrains[deadArmy].BrainType ~= 'Human' then return end
     import('/lua/ScenarioFramework.lua').SetSharedUnitCap()
 end
 
