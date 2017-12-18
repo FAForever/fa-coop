@@ -4,7 +4,7 @@
 -- https://github.com/FAForever/fa/wiki/mod_info.lua-documentation
 name = "FAF co-op support mod"
 version = 52
-_faf_modname='coop'
+_faf_modname = 'coop'
 copyright = "Forged Alliance Forever Community"
 description = "Support mod for coop maps"
 author = "Forged Alliance Forever Community"
@@ -17,5 +17,8 @@ conflicts = {}
 mountpoints = {
     lua = '/lua',
     units = '/units',
-    ['mods/coop/hook'] = '/schook'
+    mods = '/mods'
+}
+hooks = {
+    '/mods/coop/hook'
 }
