@@ -1,5 +1,15 @@
 # Changelog
 
+## v53 (December 20th, 2017)
+- Fixed wrong mountpoints causing coop to not work in Downlord's client.
+- New functions to prevent giving objective units to other player (giving them was breaking some missions).
+- Better splitting of unit cap among all players.
+- Default share condition changed to Full share.
+
+### Contributors
+- axel12
+- speed2
+
 ## v52 (September 28th, 2017)
 - Fixed syntax error in mod_info.lua.
 - Added helper fuctions for random events and refreshing unit restrictions.
