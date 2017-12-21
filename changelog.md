@@ -1,5 +1,11 @@
 # Changelog
 
+## v54 (December 21th, 2017)
+- Hotfix for broken Capture objectives.
+
+### Contributors
+- speed2
+
 ## v53 (December 20th, 2017)
 - Fixed wrong mountpoints causing coop to not work in Downlord's client.
 - New functions to prevent giving objective units to other player (giving them was breaking some missions).
