@@ -197,5 +197,27 @@ table.insert(globalOpts,
     }
 )
 
+-- Add the "Timer Expansion" option.
+table.insert(globalOpts,
+    {
+        default = 1,
+        label = "<LOC coop_009>Timed Expansion",
+        help = "<LOC coop_010>Certain missions can continue to the next part even if the primary objectives aren't completed yet.",
+        key = 'Expansion',
+        values = {
+            {
+                text = "<LOC _On>On",
+                help = "<LOC coop_011>Where it makes sense story wise, the map will expand after a certain time even if the primary objectives are not yet completed.",
+                key = true,
+            },
+            {
+                text = "<LOC _Off>Off",
+                help = "<LOC coop_012>The map won't expand until the primary objectives are completed.",
+                key = false,
+            },
+        },
+    }
+)
+
 -- AI options break *everything*.
 AIOpts = {}
