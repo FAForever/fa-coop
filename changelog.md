@@ -1,5 +1,11 @@
 # Changelog
 
+## v55 (January 12th, 2018)
+- New lobby option to disable timed expansion.
+
+### Contributors
+- speed2
+
 ## v54 (December 21th, 2017)
 - Hotfix for broken Capture objectives.
 
