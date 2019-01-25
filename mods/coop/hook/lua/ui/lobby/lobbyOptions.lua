@@ -170,6 +170,17 @@ timeoutsOption.values = {
     }
 }
 
+-- AI Replacement
+local AIReplacementOption = getOption("AIReplacement", globalOpts)
+AIReplacementOption.default = 1
+AIReplacementOption.values = {
+    {
+        text = "<LOC _Off>Off",
+        help = "<LOC aireplace_0004>A disconnected player will cause the destruction of their units based on share conditions.",
+        key = 'Off',
+    }
+}
+
 -- Add the "Difficulty" option.
 table.insert(globalOpts,
     {
