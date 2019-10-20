@@ -18,6 +18,13 @@ function CreateUI()
         LayoutHelpers.AtLeftTopIn(GUI.observerPanel, GUI.panel, 512, 503)
         GUI.observerPanel.Width:Set(278)
         GUI.observerPanel.Height:Set(206)
+
+        -- Hide AI autofill options
+        GUI.AIFillPanel:Hide()
+        GUI.AIFillButton:Hide()
+        GUI.AIClearButton:Hide()
+        GUI.TeamCountSelector:Hide()
+        GUI.AIFillPanelBorder:Hide()
     end
 
     -- Force the teams display to always stay hidden.
