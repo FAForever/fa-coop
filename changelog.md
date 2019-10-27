@@ -1,5 +1,14 @@
 # Changelog
 
+## v56 (October 27th, 2019)
+- Remove AI autofill option from the lobby.
+- Hide AI replacement option from the lobby.
+- Fix line endings.
+
+### Contributors
+- Downlord
+- speed2
+
 ## v55 (January 12th, 2018)
 - New lobby option to disable timed expansion.
 
