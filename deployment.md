@@ -12,8 +12,14 @@ The Mod patcher script has special logic to just read the checksum of the deploy
 
 ### Maps
 
+#### Updating
 * Go to `/opt/....../fa-coop/faf-coop-maps` and update (`git fetch`, then `git checkout` the tag)
 * Run `./make_all.sh`
+
+#### Adding a new map
+Insert new records into table `coop_map`. As type use `4` (custom coop map). Write down the id of the new record.
+Edit the `make_path.sh` in the faf-coop-maps folder. Add the new map folder in the declarative arrays MAP_IDS and MAP_TYPES. For MAP_IDS use the record id from the SQL row. For MAP_TYPES use the same type as in the SQL row.
+Now follow the regular instructions for update.
 
 ### Voice-Overs
 
