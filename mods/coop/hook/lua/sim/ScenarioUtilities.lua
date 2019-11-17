@@ -1,12 +1,18 @@
 -- Ignore unit restrictions in all functions that are spawning units
 
 local ScenarioFramework = import('/lua/ScenarioFramework.lua')
+local isCommonArmy = nil
+local OldInitializeScenarioArmies = InitializeScenarioArmies
+local OldCreatePlatoons = CreatePlatoons
 
 ----[  CreateArmyUnit                                                             ]--
 ----[                                                                             ]--
 ----[  Creates a named unit in an army.                                           ]--
 function CreateArmyUnit(strArmy,strUnit)
     local tblUnit = FindUnit(strUnit,Scenario.Armies[strArmy].Units)
+    if isCommonArmy and StringStartsWith(strArmy, 'Player') then
+        strArmy = 'Player1'
+    end
     local brain = GetArmyBrain(strArmy)
     if not brain.IgnoreArmyCaps then
         SetIgnoreArmyUnitCap(brain:GetArmyIndex(), true)
@@ -50,6 +56,34 @@ function CreateArmyUnit(strArmy,strUnit)
     end
     ScenarioFramework.IgnoreRestrictions(false)
     return nil
+end
+
+----[  InitializeScenarioArmies                                                   ]--
+----[                                                                             ]--
+----[                                                                             ]--
+function InitializeScenarioArmies()
+    isCommonArmy = ScenarioInfo.Options.CommonArmy == 'true'
+    
+    if isCommonArmy then
+        for strArmy, iArmy in ScenarioInfo.HumanPlayers do
+            ArmyGetHandicap(ScenarioInfo.HumanPlayers['Player1'] - 1, iArmy - 1, true)
+            ArmyGetHandicap(iArmy - 1, iArmy - 1, false)
+            if GetFocusArmy() == iArmy then
+                ForkThread(
+                function(leaderIndex)
+                    SimConExecute('SetFocusArmy ' .. leaderIndex - 1)
+                end, ScenarioInfo.HumanPlayers['Player1'])
+            end
+        end
+    end
+    return OldInitializeScenarioArmies()
+end
+
+function CreatePlatoons(strArmy, tblNode, tblResult, platoonList, currPlatoon, treeResult, balance)
+    if isCommonArmy and StringStartsWith(strArmy, 'Player') then
+        strArmy = 'Player1'
+    end
+    return OldCreatePlatoons(strArmy, tblNode, tblResult, platoonList, currPlatoon, treeResult, balance)
 end
 
 ----[  CreateArmySubGroup                                                                      ]--
@@ -201,6 +235,11 @@ function CreateArmyGroupAsPlatoon(strArmy, strGroup, formation, tblNode, platoon
     if not formation then
         error('*SCENARIO UTILS ERROR: No formation given to CreateArmyGroupAsPlatoon')
     end
+
+    if isCommonArmy and StringStartsWith(strArmy, 'Player') then
+        strArmy = 'Player1'
+    end
+
     local brain = GetArmyBrain(strArmy)
     if not brain.IgnoreArmyCaps then
         SetIgnoreArmyUnitCap(brain:GetArmyIndex(), true)

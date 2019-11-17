@@ -10,6 +10,8 @@ coop_009="Timed Expansion"
 coop_010="Certain missions can continue to the next part even if the primary objectives aren't yet completed."
 coop_011="Where it makes sense story wise, the map will expand after a certain time even if the primary objectives are not yet completed."
 coop_012="The map won't expand until the primary objectives are completed."
+coop_013="Common army"
+coop_014="Creates a single army for all players"
 
 A01_B01_000_010="Datum: 9. AUGUST 3844"
 A01_B01_001_010="Hallo, Ritter. Ich bin Avatar Marxon. Sie werden mir Bericht erstatten und zwar ausschließlich mir."

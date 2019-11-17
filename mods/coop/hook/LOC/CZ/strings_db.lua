@@ -10,6 +10,8 @@ coop_009="Časovaná expanze"
 coop_010="Některé mise mohou pokračovat do další časti i přes to, že primární úkoly ještě nebyly splněny."
 coop_011="Pokud to dává smysl příběhově, mise bude po určitém čase pokračovat i přes to, že primární úkoly ještě nebyly splněny."
 coop_012="Mise nebude pokračovat dokud nebudou všechny primární úkoly splněny."
+coop_013="Common army"
+coop_014="Creates a single army for all players"
 
 A01_B01_000_010="Datum: 9. srpna 3844"
 A01_B01_001_010="Zdravím, rytířko. Jsem avatár Marxon. Budeš se hlásit přímo a pouze mně."

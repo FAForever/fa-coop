@@ -4,7 +4,7 @@ function OnCreateArmyBrain(index, brain, name, nickname)
 
     -- Stuff this army into the HumanPlayers set, if applicable.
     if StringStartsWith(ArmyBrains[index].Name, "Player") then
-        table.insert(ScenarioInfo.HumanPlayers, index)
+        ScenarioInfo.HumanPlayers[ArmyBrains[index].Name] = index
     end
 end
 
