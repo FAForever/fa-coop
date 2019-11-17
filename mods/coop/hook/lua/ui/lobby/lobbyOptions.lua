@@ -219,12 +219,12 @@ table.insert(globalOpts,
             {
                 text = "<LOC _On>On",
                 help = "<LOC coop_011>Where it makes sense story wise, the map will expand after a certain time even if the primary objectives are not yet completed.",
-                key = true,
+                key = 'true',
             },
             {
                 text = "<LOC _Off>Off",
                 help = "<LOC coop_012>The map won't expand until the primary objectives are completed.",
-                key = false,
+                key = 'false',
             },
         },
     }
