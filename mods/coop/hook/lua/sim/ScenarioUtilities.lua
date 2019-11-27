@@ -66,6 +66,7 @@ function InitializeScenarioArmies()
     
     if isCommonArmy then
         for strArmy, iArmy in ScenarioInfo.HumanPlayers do
+            if strArmy == 'Player1' then continue end
             ArmyGetHandicap(ScenarioInfo.HumanPlayers['Player1'] - 1, iArmy - 1, true)
             ArmyGetHandicap(iArmy - 1, iArmy - 1, false)
             if GetFocusArmy() == iArmy then
