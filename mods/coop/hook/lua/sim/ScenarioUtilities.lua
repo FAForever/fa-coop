@@ -63,12 +63,21 @@ end
 ----[                                                                             ]--
 function InitializeScenarioArmies()
     isCommonArmy = ScenarioInfo.Options.CommonArmy == 'true'
+
+    local armyPlayers = {}
+    local humansIndex = 1
+    for _, army in ScenarioInfo.ArmySetup do
+        if not army.Human then continue end
+        armyPlayers[army.ArmyIndex] = humansIndex
+        humansIndex = humansIndex + 1
+    end
     
     if isCommonArmy then
         for strArmy, iArmy in ScenarioInfo.HumanPlayers do
-            if strArmy == 'Player1' then continue end
-            ArmyGetHandicap(ScenarioInfo.HumanPlayers['Player1'] - 1, iArmy - 1, true)
-            ArmyGetHandicap(iArmy - 1, iArmy - 1, false)
+            local selHumansIndex = armyPlayers[iArmy]
+            if (strArmy == 'Player1') or (selHumansIndex == nil) then continue end
+            ArmyGetHandicap(ScenarioInfo.HumanPlayers['Player1'] - 1, selHumansIndex - 1, true)
+            ArmyGetHandicap(iArmy - 1, selHumansIndex - 1, false)
             if GetFocusArmy() == iArmy then
                 ForkThread(
                 function(leaderIndex)
