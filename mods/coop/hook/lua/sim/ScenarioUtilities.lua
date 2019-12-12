@@ -66,13 +66,13 @@ function InitializeScenarioArmies()
     
     if isCommonArmy then
         local humansIndex = 0
-        for strArmy, iArmy in ScenarioInfo.HumanPlayers do
-            if GetArmyBrain(iArmy).BrainType ~= 'Human' then continue end
+        for i, brain in ArmyBrains do
+            if brain.BrainType ~= 'Human' then continue end
             humansIndex = humansIndex + 1
-            if strArmy == 'Player1' then continue end
+            if brain.Name == 'Player1' then continue end
             ArmyGetHandicap(ScenarioInfo.HumanPlayers['Player1'] - 1, humansIndex - 1, true)
-            ArmyGetHandicap(iArmy - 1, humansIndex - 1, false)
-            if GetFocusArmy() == iArmy then
+            ArmyGetHandicap(i - 1, humansIndex - 1, false)
+            if GetFocusArmy() == i then
                 ForkThread(
                 function(leaderIndex)
                     SimConExecute('SetFocusArmy ' .. leaderIndex - 1)

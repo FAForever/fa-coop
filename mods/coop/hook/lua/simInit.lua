@@ -3,8 +3,8 @@ function OnCreateArmyBrain(index, brain, name, nickname)
     ReallyOnCreateArmyBrain(index, brain, name, nickname)
 
     -- Stuff this army into the HumanPlayers set, if applicable.
-    if StringStartsWith(ArmyBrains[index].Name, "Player") then
-        ScenarioInfo.HumanPlayers[ArmyBrains[index].Name] = index
+    if StringStartsWith(name, "Player") then
+        ScenarioInfo.HumanPlayers[name] = index
     end
 end
 
