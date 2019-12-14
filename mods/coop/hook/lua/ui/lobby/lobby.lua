@@ -35,4 +35,12 @@ function CreateUI()
         teamControl.Show = teamControl.Hide
         teamControl:Hide()
     end
+
+    GUI.launchGameButton.OnClick = function(self)
+        if (gameInfo.PlayerOptions[1] == nil) or (gameInfo.PlayerOptions[1].Human == false) then
+            SendSystemMessage('coop_015') --The first slot cannot be empty or occupied AI
+            return
+        end
+        TryLaunch(false)
+    end
 end

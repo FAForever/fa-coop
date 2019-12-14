@@ -12,6 +12,7 @@ coop_011="Pokud to dává smysl příběhově, mise bude po určitém čase pokr
 coop_012="Mise nebude pokračovat dokud nebudou všechny primární úkoly splněny."
 coop_013="Common army"
 coop_014="Creates a single army for all players"
+coop_015="The first slot cannot be empty or occupied AI"
 
 A01_B01_000_010="Datum: 9. srpna 3844"
 A01_B01_001_010="Zdravím, rytířko. Jsem avatár Marxon. Budeš se hlásit přímo a pouze mně."

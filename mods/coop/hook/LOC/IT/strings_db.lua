@@ -12,6 +12,7 @@ coop_011="Where it makes sense story wise, the map will expand after a certain t
 coop_012="The map won't expand until the primary objectives are completed."
 coop_013="Common army"
 coop_014="Creates a single army for all players"
+coop_015="The first slot cannot be empty or occupied AI"
 
 A01_B01_000_010="Data: 9 AGOSTO 3844"
 A01_B01_001_010="Salve Cavaliere. Sono l'Avatar Marxon. Farete rapporto a me e soltanto a me."
