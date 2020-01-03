@@ -139,11 +139,11 @@ function PlayerDeath(deadCommander, failureDialogue, currentObjectives)
     end
         local CommanderUnits = GetListOfHumanUnits(categories.COMMAND)
         for _, unit in CommanderUnits do
-            if unit ~= deadCommander then
+            if table.getsize(unit.EventCallbacks['OnKilled']) == 0 then
                 CreateUnitDeathTrigger(PlayerDeath, unit, true)
             end
         end
-    if (table.getn(CommanderUnits)-1 > 0) or (ScenarioInfo.OpEnded) then
+    if (table.getsize(CommanderUnits)-1 > 0) or (ScenarioInfo.OpEnded) then
         return
     end
 
