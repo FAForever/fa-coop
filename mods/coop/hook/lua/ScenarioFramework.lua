@@ -137,10 +137,12 @@ function PlayerDeath(deadCommander, failureDialogue, currentObjectives)
     if failureDialogue then
         FailDialogue = failureDialogue
     end
+        local scenarioFuncPtr = debug.getinfo(2, 'f')
+        scenarioFuncPtr = scenarioFuncPtr['func']
         local CommanderUnits = GetListOfHumanUnits(categories.COMMAND)
         for _, unit in CommanderUnits do
-            if table.getsize(unit.EventCallbacks['OnKilled']) == 0 then
-                CreateUnitDeathTrigger(PlayerDeath, unit, true)
+            if not table.find(unit.EventCallbacks['OnKilled'], scenarioFuncPtr) then
+                CreateUnitDeathTrigger(scenarioFuncPtr, unit, true)
             end
         end
     if (table.getsize(CommanderUnits)-1 > 0) or (ScenarioInfo.OpEnded) then
