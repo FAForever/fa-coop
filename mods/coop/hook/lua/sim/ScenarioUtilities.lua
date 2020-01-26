@@ -70,8 +70,8 @@ function InitializeScenarioArmies()
             if brain.BrainType ~= 'Human' then continue end
             humansIndex = humansIndex + 1
             if brain.Name == 'Player1' then continue end
-            ArmyGetHandicap(ScenarioInfo.HumanPlayers['Player1'] - 1, humansIndex - 1, true)
-            ArmyGetHandicap(i - 1, humansIndex - 1, false)
+            SetCommandSource(ScenarioInfo.HumanPlayers['Player1'] - 1, humansIndex - 1, true)
+            SetCommandSource(i - 1, humansIndex - 1, false)
             if GetFocusArmy() == i then
                 ForkThread(
                 function(leaderIndex)
