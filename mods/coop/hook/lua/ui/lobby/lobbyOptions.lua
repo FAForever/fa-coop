@@ -233,18 +233,18 @@ table.insert(globalOpts,
 -- Add the "Common Army" option.
 table.insert(globalOpts,
     {
-        default = 1,
+        default = 2,
         label = "<LOC coop_013>Common Army",
         help = "<LOC coop_014>Creates a single army for all players",
         key = 'CommonArmy',
         values = {
             {
-                text = "<LOC _Yes>Yes",
+                text = "<LOC _On>On",
                 help = "",
                 key = 'true',
             },
             {
-                text = "<LOC _No>No",
+                text = "<LOC _Off>Off",
                 help = "",
                 key = 'false',
             },
