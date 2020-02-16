@@ -1,4 +1,14 @@
 local FactionData = import('/lua/factions.lua')
+local FailDialogue = nil
+local OldGiveUnitToArmy = GiveUnitToArmy
+
+function GiveUnitToArmy(unit, newArmyIndex, triggerOnGiven)
+    local newBrain = GetArmyBrain(newArmyIndex)
+    if (ScenarioInfo.Options.CommonArmy == 'true') and StringStartsWith(newBrain.Name, 'Player') then
+        newArmyIndex = ScenarioInfo.HumanPlayers['Player1']
+    end
+    return OldGiveUnitToArmy(unit, newArmyIndex, triggerOnGiven)
+end
 
 function GetLeaderAndLocalFactions()
     local leaderFactionIndex = GetArmyBrain('Player1'):GetFactionIndex()
@@ -85,6 +95,12 @@ end
 
 -- Sets unit capacity depending on number of the players
 function SetSharedUnitCap(number)
+    if ScenarioInfo.Options.CommonArmy == 'true' then
+        if number >= 0 then
+            SetArmyUnitCap(ScenarioInfo.HumanPlayers['Player1'], number)
+        end
+        return
+    end
     -- Find out how many players are still alive
     local aliveCount = 0
     local alive = {}
@@ -118,7 +134,18 @@ end
 -- @param failureDialogue A VO to play explaining how much of a failure you are (if any).
 -- @param currentObjectives The AssignedObjectives from the map.
 function PlayerDeath(deadCommander, failureDialogue, currentObjectives)
-    if ScenarioInfo.OpEnded then
+    if failureDialogue then
+        FailDialogue = failureDialogue
+    end
+        local scenarioFuncPtr = debug.getinfo(2, 'f')
+        scenarioFuncPtr = scenarioFuncPtr['func']
+        local CommanderUnits = GetListOfHumanUnits(categories.COMMAND)
+        for _, unit in CommanderUnits do
+            if not table.find(unit.EventCallbacks['OnKilled'], scenarioFuncPtr) then
+                CreateUnitDeathTrigger(scenarioFuncPtr, unit, true)
+            end
+        end
+    if (table.getsize(CommanderUnits)-1 > 0) or (ScenarioInfo.OpEnded) then
         return
     end
 
@@ -135,9 +162,9 @@ function PlayerDeath(deadCommander, failureDialogue, currentObjectives)
     end
 
     -- Play failure dialogue before continuing.
-    if failureDialogue then
+    if FailDialogue then
         FlushDialogueQueue()
-        Dialogue(failureDialogue, continuation, true)
+        Dialogue(FailDialogue, continuation, true)
     else
         continuation()
     end
