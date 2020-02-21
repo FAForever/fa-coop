@@ -4,12 +4,20 @@ function CreateSimAnnouncement(tblData)
 end
 
 -- Add a button to show a transmission log into the main menu
-do
-    local transmissionEntry = {action = 'TransmissionLog', label='<LOC trans_log_0000>Transmission Log', tooltip = 'inbox'}
-    table.insert(menus.main.replay, 4, transmissionEntry)
-    table.insert(menus.main.lan, 3, transmissionEntry)
-    table.insert(menus.main.gpgnet, 3, transmissionEntry)
-    table.insert(menus.main.singlePlayer, 5, transmissionEntry)
+local transmissionEntry = {action = 'TransmissionLog', label='<LOC trans_log_0000>Transmission Log', tooltip = 'inbox'}
+table.insert(menus.main.replay, 4, transmissionEntry)
+table.insert(menus.main.lan, 3, transmissionEntry)
+table.insert(menus.main.gpgnet, 3, transmissionEntry)
+table.insert(menus.main.singlePlayer, 5, transmissionEntry)
 
-    actions.TransmissionLog = function() import('/lua/ui/game/transmissionlog.lua').ToggleTransmissionLog() end
+-- Rename the "Scenario" button that is used to display the objectives to "Objectives"
+for _, sessionType in menus.main do
+    for _, button in sessionType do
+        if button.action == 'ShowObj' then
+            button.label = '<LOC tooltipui0058>Objectives'
+            break
+        end
+    end
 end
+
+actions.TransmissionLog = function() import('/lua/ui/game/transmissionlog.lua').ToggleTransmissionLog() end
