@@ -1,5 +1,14 @@
 # Changelog
 
+## v57 (February 23rd, 2020)
+- Added a new option for common army, where all players will control a single army.
+- Fixed timed expansions settings not being saved.
+- Ingame menu button to display objectives renamed from "Scenario" to "Objectives".
+
+### Constributors
+- KionX
+- speed2
+
 ## v56 (October 27th, 2019)
 - Remove AI autofill option from the lobby.
 - Hide AI replacement option from the lobby.
