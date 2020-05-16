@@ -1,5 +1,12 @@
+local ParentUpdateGame = UpdateGame
 -- Do some extra logic at the end of CreateUI to delete some buttons that make no sense.
 local ReallyCreateUI = CreateUI
+
+function UpdateGame()
+    ParentUpdateGame()
+    GUI.autoTeams:Hide()
+end
+
 function CreateUI()
     ReallyCreateUI()
 
@@ -11,11 +18,10 @@ function CreateUI()
         -- The whole top row of host-only buttons also make no sense. Random map? Default options?
         -- Auto teams? What?
         GUI.randMap:Hide()
-        GUI.autoTeams:Hide()
         GUI.defaultOptions:Hide()
 
         -- Expand the observer panel into the space.
-        LayoutHelpers.AtLeftTopIn(GUI.observerPanel, GUI.panel, 512, 503)
+        LayoutHelpers.AtLeftTopIn(GUI.observerPanel, GUI.panel, 512, 498)
         GUI.observerPanel.Width:Set(278)
         GUI.observerPanel.Height:Set(206)
 
@@ -24,7 +30,7 @@ function CreateUI()
         GUI.AIFillButton:Hide()
         GUI.AIClearButton:Hide()
         GUI.TeamCountSelector:Hide()
-        GUI.AIFillPanelBorder:Hide()
+        GUI.AIFillCombo:Hide()
     end
 
     -- Force the teams display to always stay hidden.
