@@ -50,3 +50,30 @@ function CreateUI()
         TryLaunch(false)
     end
 end
+
+-- Changes the logic of sending number of slots to count only armies that contain "Player"
+local oldSetGameOptions = SetGameOptions
+function SetGameOptions(options, ignoreRefresh)
+    oldSetGameOptions(options, ignoreRefresh)
+
+    for key, val in options do
+        if key == 'ScenarioFile' then
+            if gameInfo.GameOptions.ScenarioFile and (gameInfo.GameOptions.ScenarioFile ~= '') then
+                if DiskGetFileInfo(gameInfo.GameOptions.ScenarioFile) then
+                    local scenarioInfo = MapUtil.LoadScenario(gameInfo.GameOptions.ScenarioFile)
+                    if scenarioInfo and scenarioInfo.map and (scenarioInfo.map ~= '') then
+                        -- Coop change, count only player slots instead of the whole armies table
+                        local num = 0
+                        for _, army in scenarioInfo.Configurations.standard.teams[1].armies do
+                            if StringStartsWith(army, "Player") then
+                                num = num + 1
+                            end
+                        end
+                        GpgNetSend('GameOption', 'Slots', num)
+                        return
+                    end
+                end
+            end
+        end
+    end
+end
