@@ -49,6 +49,10 @@ function CreateUI()
         end
         TryLaunch(false)
     end
+
+    -- Get the difficulty option sent from the client
+    local num = tonumber(GetCommandLineArg("/difficulty", 1)[1] or 3)
+    SetGameOption('Difficulty', num, true)
 end
 
 -- Changes the logic of sending number of slots to count only armies that contain "Player"
