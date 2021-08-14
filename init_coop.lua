@@ -136,6 +136,29 @@ local function mount_map_dir(dir, glob, mountpoint)
     end
 end
 
+function mount_mod_sounds(MODFOLDER)
+    -- searching for mods inside the modfolder
+    for _,mod in io.dir( MODFOLDER..'\\*.*') do
+        -- do we have a true directory ?
+        if mod != '.' and mod != '..' then
+            -- searching for sounds inside mod folder
+            for _,folder in io.dir(MODFOLDER..'\\'..mod..'\\*.*') do
+                -- if we found a folder named sounds then mount it
+                if folder == 'sounds' then
+                    LOG('Found mod sounds in: '..mod)
+                    mount_dir(MODFOLDER..'\\'..mod..'\\sounds', '/sounds')
+                    break
+                end
+            end
+        end
+    end
+end
+
+----Mod sounds aren't loading with COOP
+
+mount_mod_sounds(SHGetFolderPath('PERSONAL') .. 'My Games\\Gas Powered Games\\Supreme Commander Forged Alliance\\mods')
+mount_mod_sounds(InitFileDir .. '\\..\\user\\My Games\\Gas Powered Games\\Supreme Commander Forged Alliance\\mods')
+
 -- mount maps
 mount_map_dir(SHGetFolderPath('PERSONAL') .. 'My Games\\Gas Powered Games\\Supreme Commander Forged Alliance\\maps\\', '**', '/maps')
 mount_map_dir(InitFileDir .. '\\..\\user\\My Games\\Gas Powered Games\\Supreme Commander Forged Alliance\\maps\\', '**', '/maps')
