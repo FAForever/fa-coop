@@ -1,5 +1,24 @@
 # Changelog
 
+## v58
+
+### Features
+
+- Add support for passing the difficulty via the commandline (192d05)
+
+### Bug fixes
+
+- Improve co-op init file (#97)
+    Fixes the 'missing map on launch' problem, adds support for custom strategic icons and in general
+    improves the init file to be more informative about what is (not) going on
+
+- Set correct number of available (player) slots for the client (56b650)
+
+### Contributors
+
+- Jip (#97)
+- speed2 (192d05, 56b650)
+
 ## v57 (February 23rd, 2020)
 - Added a new option for common army, where all players will control a single army.
 - Fixed timed expansions settings not being saved.
