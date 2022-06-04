@@ -100,7 +100,6 @@ allowedAssetsScd = LowerHashTable(allowedAssetsScd)
 
 -- typical backwards compatible packages
 local allowedAssetsNxt = { }
-allowedAssetsNxt["texturepack.nxt"] = true
 allowedAssetsNxt["advanced strategic icons.nxt"] = true
 allowedAssetsNxt["advanced_strategic_icons.nxt"] = true
 allowedAssetsNxt = LowerHashTable(allowedAssetsNxt)
@@ -137,22 +136,6 @@ local function MountDirectory(dir, mountpoint)
     UpvaluedPathNext = UpvaluedPathNext + 1
 end
 
---- Mounts all allowed content in a directory, including scd and zip files, to the mountpoint.
--- @param dir The absolute path to the directory
--- @param mountpoint The path to use in the game (e.g., /maps/...)
-local function MountContent(dir, mountpoint, allowedAssets)
-    for _,entry in IoDir(dir .. '/*') do
-        if entry != '.' and entry != '..' then
-            local mp = StringLower(entry)
-            if allowedAssets[mp] then 
-                MountDirectory(dir .. '/' .. entry, mountpoint .. '/' .. mp)
-            else 
-                LOG("Prevented loading content that is not allowed: " .. entry)
-            end
-        end
-    end
-end
-
 --- Mounts all allowed content in a directory, including scd and zip files, directly.
 -- @param dir The absolute path to the directory
 -- @param mountpoint The path to use in the game (e.g., /maps/...)
@@ -161,7 +144,7 @@ local function MountAllowedContent(dir, pattern, allowedAssets)
         if entry != '.' and entry != '..' then
             local mp = StringLower(entry)
             if (not allowedAssets) or allowedAssets[mp] then 
-                LOG("Mounting: " .. mp)
+                LOG("Mounting content: " .. mp)
                 MountDirectory(dir .. "/" .. entry, '/')
             end
         end
@@ -419,18 +402,11 @@ end
 
 -- END OF COPY --
 
--- minimum viable shader version - should be bumped to the next release version when we change the shaders
-local minimumShaderVersion = 3729
-
--- look for unviable shaders and remove them
+-- always reset shader cache
 local shaderCache = SHGetFolderPath('LOCAL_APPDATA') .. 'Gas Powered Games/Supreme Commander Forged Alliance/cache'
 for k, file in IoDir(shaderCache .. '/*') do
-    if file ~= '.' and file ~= '..' then 
-        local version = tonumber(string.sub(file, -4))
-        if not version or version < minimumShaderVersion then 
-            LOG("Force shader recompilation of file: " .. file)
-            os.remove(shaderCache .. '/' .. file)
-        end
+    if file ~= '.' and file ~= '..' then
+        os.remove(shaderCache .. '/' .. file)
     end
 end
 
