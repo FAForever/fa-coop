@@ -1,6 +1,6 @@
 # Changelog
 
-## v58
+## v59
 
 ### Features
 
