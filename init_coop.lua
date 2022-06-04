@@ -94,7 +94,6 @@ allowedAssetsScd["env.scd"] = true
 allowedAssetsScd["effects.scd"] = true
 allowedAssetsScd["editor.scd"] = true
 allowedAssetsScd["ambience.scd"] = true
-allowedAssetsScd["lobbymanager_v105.scd"] = true
 allowedAssetsScd["sc_music.scd"] = true
 allowedAssetsScd = LowerHashTable(allowedAssetsScd)
 
