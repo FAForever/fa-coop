@@ -1,5 +1,15 @@
 # Changelog
 
+## v60
+
+### Bug fixes
+
+- (#100) Fix the movie files for the base game missions
+
+### Contributors
+
+- Jip (#100)
+
 ## v59
 
 ### Features
