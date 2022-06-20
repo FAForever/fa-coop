@@ -19,6 +19,7 @@ end
 
 local reallyCreateDialog = CreateDialog
 function CreateDialog(...)
+    LOG(" I HAPPENED!")
     local ret = reallyCreateDialog(unpack(arg))
 
     -- Delete the map filter UI (there aren't enough coop missions to warrant a scrollbar, and the most
