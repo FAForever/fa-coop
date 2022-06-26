@@ -159,7 +159,7 @@ shareUnitCapOption.values = {
     }
 }
 
--- Share unit cap
+-- Puase options
 local timeoutsOption = getOption("Timeouts", globalOpts)
 timeoutsOption.default = 1
 timeoutsOption.values = {
@@ -178,6 +178,28 @@ AIReplacementOption.values = {
         text = "<LOC _Off>Off",
         help = "<LOC aireplace_0004>A disconnected player will cause the destruction of their units based on share conditions.",
         key = 'Off',
+    }
+}
+
+-- Always ranked
+local unranked = getOption("Unranked", globalOpts)
+unranked.default = 1
+unranked.values = {
+    {
+        text = "<LOC lobui_0804>No",
+        help = "<LOC lobui_0805>This game will be rated if all the criteria for a rated game are met.",
+        key = 'No',
+    }
+}
+
+-- Always allow unit sharing
+local unitManualShare = getOption("ManualUnitShare", globalOpts)
+unitManualShare.default = 1
+unitManualShare.values = {
+    {
+        text = "<LOC _Yes>Yes",
+        help = "<LOC lobui_0792>Manual unit sharing are allowed",
+        key = 'all',
     }
 }
 
