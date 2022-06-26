@@ -249,7 +249,11 @@ function CreateArmyGroupAsPlatoon(strArmy, strGroup, formation, tblNode, platoon
         SetIgnoreArmyUnitCap(brain:GetArmyIndex(), true)
     end
     ScenarioFramework.IgnoreRestrictions(true)
-    local platoon = platoon or brain:MakePlatoon('','')
+    if not platoon then
+        platoon = brain:MakePlatoon('','')
+        platoon.PlatoonData = {UseFormation = formation}
+    end
+    
     local armyIndex = brain:GetArmyIndex()
 
     local unit = nil
