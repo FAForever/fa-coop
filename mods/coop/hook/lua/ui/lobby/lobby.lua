@@ -22,8 +22,7 @@ function CreateUI()
 
         -- Expand the observer panel into the space.
         LayoutHelpers.AtLeftTopIn(GUI.observerPanel, GUI.panel, 512, 498)
-        GUI.observerPanel.Width:Set(278)
-        GUI.observerPanel.Height:Set(206)
+        LayoutHelpers.SetDimensions(GUI.observerPanel, 278, 206)
 
         -- Hide AI autofill options
         GUI.AIFillPanel:Hide()
