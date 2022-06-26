@@ -19,6 +19,7 @@ function CreateUI()
         -- Auto teams? What?
         GUI.randMap:Hide()
         GUI.defaultOptions:Hide()
+        GUI.PenguinAutoBalance:Hide()
 
         -- Expand the observer panel into the space.
         LayoutHelpers.AtLeftTopIn(GUI.observerPanel, GUI.panel, 512, 498)
