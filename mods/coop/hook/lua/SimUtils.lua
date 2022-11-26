@@ -1,7 +1,10 @@
 do
     --- Filter out units that were set in the script that they can't be given to other players
     local oldTransferUnitsOwnership = TransferUnitsOwnership
-    TransferUnitsOwnership = function(units, ToArmyIndex)
+    TransferUnitsOwnership = function(units, ToArmyIndex, captured)
+
+        reprsl(debug.traceback())
+
         if not units then
             return
         end
@@ -12,7 +15,8 @@ do
                 table.insert(toGiveUnits, v)
             end
         end
-        oldTransferUnitsOwnership(toGiveUnits, ToArmyIndex)
+
+        return oldTransferUnitsOwnership(toGiveUnits, ToArmyIndex, captured)
     end
 end
 

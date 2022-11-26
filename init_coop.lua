@@ -11,13 +11,12 @@ local locationOfRepositoryCoop = false
 -- we can not load in additional init files with the current deployment 
 -- system and therefore we copy/paste this section into the other init files.
 
--- imports various values that are set by the client. In particular:
---  - fa_path: installation location of forged alliance on your system
--- - custom_vault_path: location of the vault on your system
--- - GameVersion: game version that is being run
--- - GameType: game type chosen by the user
--- - ClientVersion: client version that is being run
+-- imports fa_path to determine where it is installed
 dofile(InitFileDir .. '/../fa_path.lua')
+
+LOG("Client version: " .. tostring(ClientVersion))
+LOG("Game version: " .. tostring(GameVersion))
+LOG("Game type: " .. tostring(GameType))
 
 -- upvalued performance
 local dofile = dofile
@@ -37,8 +36,7 @@ path = {}
 
 -- read by the engine to determine hook folders
 hook = {
-      '/schook'
-    , '/mods/coop/hook'
+    '/schook'
 }
 
 -- read by the engine to determine supported protocols
@@ -68,22 +66,61 @@ end
 -- mods that have been integrated, based on folder name 
 local integratedMods = { }
 integratedMods["nvidia fix"] = true
+
 integratedMods = LowerHashTable(integratedMods)
+
+-- take care that the folder name is properly spelled and Capitalized
+-- deprecatedMods["Mod Folder Name"] = deprecation status
+--   true: deprecated regardless of mod version
+--   versionstring: lower or equal version numbers are deprecated, eg: "3.10"
+local deprecatedMods = {}
+
+-- mods that are deprecated, based on mod folder name
+deprecatedMods["simspeed++"] = true
+deprecatedMods["#quality of performance 2022"] = true
+deprecatedMods["em"] = "11"
+
+-- as per #4119 the control groups (called selection sets in code) are completely overhauled and extended feature-wise,
+-- because of that these mods are no longer viable / broken / integrated
+deprecatedMods["group_split"] = "0.1"
+deprecatedMods["Control Group Zoom Mod"] = "2"
+deprecatedMods["additionalControlGroupStuff"] = true
+
+-- as per #4124 the cursor and command interactions are complete overhauled and extended feature-wise,
+-- because of that these mods are no longer viable / broken / integrated
+deprecatedMods["additionalCameraStuff"] = "3"
+deprecatedMods["RUI"] = "1.0"
+
+-- as per #4232 the reclaim view is completely overhauled
+deprecatedMods["Advanced Reclaim&Selection Info"] = "1"
+deprecatedMods["AdvancedReclaimInfo"] = "1"
+deprecatedMods["BetterReclaimView"] = "2"
+deprecatedMods["disableReclaimUI"] = "2"
+deprecatedMods["DynamicReclaimGrouping"] = "1"
+deprecatedMods["EzReclaim"] = "1.0"
+deprecatedMods["OnScreenReclaimCounter"] = "8"
+deprecatedMods["ORV"] = "1"
+deprecatedMods["SmartReclaimSupport"] = "3"
+deprecatedMods["DrimsUIPack"] = "3"
+deprecatedMods["Rheclaim"] = "2"
+
+-- convert all mod folder name keys to lower case to prevent typos
+deprecatedMods = LowerHashTable(deprecatedMods)
 
 -- typical FA packages
 local allowedAssetsScd = { }
 allowedAssetsScd["units.scd"] = true
 allowedAssetsScd["textures.scd"] = true
 allowedAssetsScd["skins.scd"] = true
-allowedAssetsScd["schook.scd"] = true
+allowedAssetsScd["schook.scd"] = false      -- completely embedded in the repository
 allowedAssetsScd["props.scd"] = true
 allowedAssetsScd["projectiles.scd"] = true
 allowedAssetsScd["objects.scd"] = true
-allowedAssetsScd["moholua.scd"] = true
-allowedAssetsScd["mohodata.scd"] = true
+allowedAssetsScd["moholua.scd"] = false     -- completely embedded in the repository
+allowedAssetsScd["mohodata.scd"] = false    -- completely embedded in the repository
 allowedAssetsScd["mods.scd"] = true
 allowedAssetsScd["meshes.scd"] = true
-allowedAssetsScd["lua.scd"] = true
+allowedAssetsScd["lua.scd"] = false         -- completely embedded in the repository
 allowedAssetsScd["loc_us.scd"] = true
 allowedAssetsScd["loc_es.scd"] = true
 allowedAssetsScd["loc_fr.scd"] = true
@@ -92,13 +129,14 @@ allowedAssetsScd["loc_de.scd"] = true
 allowedAssetsScd["loc_ru.scd"] = true
 allowedAssetsScd["env.scd"] = true
 allowedAssetsScd["effects.scd"] = true
-allowedAssetsScd["editor.scd"] = true
-allowedAssetsScd["ambience.scd"] = true
+allowedAssetsScd["editor.scd"] = false      -- Unused
+allowedAssetsScd["ambience.scd"] = false    -- Empty 
 allowedAssetsScd["sc_music.scd"] = true
 allowedAssetsScd = LowerHashTable(allowedAssetsScd)
 
 -- typical backwards compatible packages
 local allowedAssetsNxt = { }
+allowedAssetsNxt["kyros.nxt"] = true
 allowedAssetsNxt["advanced strategic icons.nxt"] = true
 allowedAssetsNxt["advanced_strategic_icons.nxt"] = true
 allowedAssetsNxt = LowerHashTable(allowedAssetsNxt)
@@ -139,12 +177,11 @@ end
 -- @param dir The absolute path to the directory
 -- @param mountpoint The path to use in the game (e.g., /maps/...)
 local function MountAllowedContent(dir, pattern, allowedAssets)
-
     for _,entry in IoDir(dir .. pattern) do
         if entry != '.' and entry != '..' then
             local mp = StringLower(entry)
-            if (not allowedAssets) or allowedAssets[mp] then 
-                LOG("Mounting content: " .. mp)
+            if allowedAssets[mp] then 
+                LOG("mounting content: " .. entry)
                 MountDirectory(dir .. "/" .. entry, '/')
             end
         end
@@ -169,7 +206,9 @@ local function MountMapContent(dir)
         end
 
         -- do not load archives as maps
-        if StringSub(map, -4) == ".zip" or StringSub(map, -4) == ".scd"  or StringSub(map, -4) == ".rar" then
+        local extension = StringSub(map, -4)
+        if extension == ".zip" or extension == ".scd" or extension == ".rar" then
+            LOG("Prevented loading a map inside a zip / scd / rar file: " .. dir .. "/" .. map)
             continue 
         end
 
@@ -192,22 +231,22 @@ local function MountMapContent(dir)
 
         -- check if it has a scenario file
         if not scenarioFile then 
-            LOG("Map doesn't have a scenario file: " .. dir .. "/" .. map)
+            LOG("Prevented loading a map with no scenario file: " .. dir .. "/" .. map)
             continue 
         end
 
         if not scmapFile then 
-            LOG("Map doesn't have a scmap file: " .. dir .. "/" .. map)
+            LOG("Prevented loading a map with no scmap file: " .. dir .. "/" .. map)
             continue 
         end
 
         if not saveFile then 
-            LOG("Map doesn't have a save file: " .. dir .. "/" .. map)
+            LOG("Prevented loading a map with no save file: " .. dir .. "/" .. map)
             continue 
         end
 
         if not scriptFile then 
-            LOG("Map doesn't have a script file: " .. dir .. "/" .. map)
+            LOG("Prevented loading a map with no script file: " .. dir .. "/" .. map)
             continue 
         end
 
@@ -290,6 +329,67 @@ local function MountMapContent(dir)
     end
 end
 
+
+--- Parses a `major.minor` string into its numeric parts, where the minor portion is optional
+---@param version string
+---@return number major
+---@return number? minor
+local function ParseVersion(version)
+    local major, minor
+    local dot_pos1 = version:find('.', 1, true)
+    if dot_pos1 then
+        major = tonumber(version:sub(1, dot_pos1 - 1))
+		-- we aren't looking for the build number, but we still need to be able to parse
+		-- the minor number properly if it does exist
+		local dot_pos2 = version:find('.', dot_pos1 + 1, true)
+		if dot_pos2 then
+			minor = tonumber(version:sub(dot_pos1 + 1, dot_pos2 - 1))
+		else
+			minor = tonumber(version:sub(dot_pos1 + 1))
+		end
+    else
+        major = tonumber(version)
+    end
+    return major, minor
+end
+
+---@param majorA number
+---@param minorA number | nil
+---@param majorB number
+---@param minorB number | nil
+---@return number
+local function CompareVersions(majorA, minorA, majorB, minorB)
+    if majorA ~= majorB then
+        return majorA - majorB
+    end
+    minorA = minorA or 0
+    minorB = minorB or 0
+    return minorA - minorB
+end
+
+--- Returns the version string found in the mod info file (which can be `nil`), or `false` if the
+--- file cannot be read
+---@param modinfo FileName
+---@return string|nil | false
+local function GetModVersion(modinfo)
+    local handle = io.open(modinfo, 'r')
+    if not handle then
+        return false -- can't read file
+    end
+
+    local _,version
+    for line in handle:lines() do
+        -- find the version
+        _,_,version = line:find("^%s*version%s*=%s*v?([%d.]*)")
+		if version then
+            break -- stop if found
+        end
+    end
+
+    handle:close()
+    return version
+end
+
 --- keep track of what mods are loaded to prevent collisions
 local loadedMods = { }
 
@@ -298,7 +398,7 @@ local loadedMods = { }
 local function MountModContent(dir)
     -- get all directories / mods at the mount point
     for _, mod in io.dir(dir..'/*.*') do
-
+        
         -- prevent capital letters messing things up
         mod = StringLower(mod)
 
@@ -307,29 +407,56 @@ local function MountModContent(dir)
             continue 
         end
 
+        local moddir = dir .. '/' .. mod
+
         -- do not load integrated mods
         if integratedMods[mod] then 
-            _ALERT("Blocked mod that is integrated: " .. mod )
+            LOG("Prevented loading a mod that is integrated: " .. mod )
             continue 
         end 
 
         -- do not load archives as mods
-        if StringFind(mod, ".zip") or StringFind(mod, ".scd") or StringFind(mod, ".rar") then
+        local extension = StringSub(mod, -4)
+        if extension == ".zip" or extension == ".scd" or extension == ".rar" then
+            LOG("Prevented loading a mod inside a zip / scd / rar file: " .. moddir)
             continue 
         end
 
-        -- check if the folder contains a _info.lua
-        local infoFile = false 
-        for _, file in IoDir(dir .. "/" .. mod .. "/*") do 
-            if StringSub(file, -9) == '_info.lua' then 
-                infoFile = file 
-            end
-        end
+        -- check if the folder contains a `mod_info.lua` file
+        local modinfo_file = IoDir(moddir .. "/mod_info.lua")[1]
 
         -- check if it has a scenario file
-        if not infoFile then 
-            _ALERT("Mod doesn't have an info file: " .. dir .. "/" .. mod)
-            continue 
+        if not modinfo_file then
+            LOG("Prevented loading an invalid mod: " .. mod .. " does not have an info file: " .. moddir)
+            continue
+        end
+        modinfo_file = moddir .. '/' .. modinfo_file
+
+        -- do not load deprecated mods
+        local deprecation_status = deprecatedMods[mod]
+        if deprecation_status then
+            if deprecation_status == true then
+                -- deprecated regardless of version
+                LOG("Prevented loading a deprecated mod: " .. mod)
+                continue
+            elseif type(deprecation_status) == "string" then
+                -- depcreated only when the mod version is less than or equal to the deprecation version
+                local mod_version = GetModVersion(modinfo_file)
+                if mod_version == false then
+                    LOG("Prevented loading a deprecated mod: " .. mod .. " does not have readable mod info (" .. modinfo_file .. ')')
+                    continue
+                end
+                if mod_version == nil then
+                    LOG("Prevented loading a deprecated mod version: " .. mod .. " does not specify a version number (must be higher than version " .. deprecation_status .. ')')
+                    continue
+                end
+                local mod_major, mod_minor = ParseVersion(mod_version)
+                local dep_major, dep_minor = ParseVersion(deprecation_status)
+                if not mod_major or CompareVersions(mod_major, mod_minor, dep_major, dep_minor) <= 0 then
+                    LOG("Prevented loading a deprecated mod version: " .. mod .. " version " .. mod_version .. " (must be higher than version " .. deprecation_status .. ')')
+                    continue
+                end
+            end
         end
 
         -- do not load mods twice
@@ -396,8 +523,8 @@ end
 -- @param path The root folder for the maps and mods
 local function LoadVaultContent(path)
     -- load in additional things, like sounds and 
-	MountMapContent(path .. '/maps')
-	MountModContent(path .. '/mods')
+    MountMapContent(path .. '/maps')
+    MountModContent(path .. '/mods')
 end
 
 -- END OF COPY --
