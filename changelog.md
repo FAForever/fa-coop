@@ -3,14 +3,19 @@
 ## v61
 
 ### Bug fixes
-- Fixed bug with AI build condition breakingthe AI
+
+- (#104) Fix units being able to gift unfinished units
+- (#103) Fixed bug with AI build condition breakingthe AI
 
 ### Changes
-- Increased ACU death explosion damage to 20 000
+
+- (95612f) Increased ACU death explosion damage to 20000
 
 ### Contributors
-- 4z0t
-- speed2
+
+- 4z0t (#103)
+- speed2 (95612f)
+- Jip (#104)
 
 ## v60
 
