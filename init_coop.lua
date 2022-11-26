@@ -373,7 +373,7 @@ end
 ---@param modinfo FileName
 ---@return string|nil | false
 local function GetModVersion(modinfo)
-    local handle = io.open(modinfo, 'r')
+    local handle = io.open(modinfo, 'rb')
     if not handle then
         return false -- can't read file
     end
