@@ -1,0 +1,10 @@
+UnitBlueprint {
+    Merge = true,
+    BlueprintId = "ual0001",
+    Weapon = {
+        [5] = {
+            NukeInnerRingDamage = 20000,
+            NukeOuterRingDamage = 500,
+        },
+    },
+}
