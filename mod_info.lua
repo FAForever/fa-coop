@@ -3,7 +3,7 @@
 -- Documentation for the extended FAF mod_info.lua format can be found here:
 -- https://github.com/FAForever/fa/wiki/mod_info.lua-documentation
 name = "FAF co-op support mod"
-version = 57
+version = 61
 _faf_modname = 'coop'
 copyright = "Forged Alliance Forever Community"
 description = "Support mod for coop maps"

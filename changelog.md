@@ -1,5 +1,17 @@
 # Changelog
 
+## v61
+
+### Bug fixes
+- Fixed bug with AI build condition breakingthe AI
+
+### Changes
+- Increased ACU death explosion damage to 20 000
+
+### Contributors
+- 4z0t
+- speed2
+
 ## v60
 
 ### Bug fixes
