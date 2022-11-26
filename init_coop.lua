@@ -36,7 +36,8 @@ path = {}
 
 -- read by the engine to determine hook folders
 hook = {
-    '/schook'
+      '/schook'
+    , '/mods/coop/hook'
 }
 
 -- read by the engine to determine supported protocols
@@ -180,7 +181,7 @@ local function MountAllowedContent(dir, pattern, allowedAssets)
     for _,entry in IoDir(dir .. pattern) do
         if entry != '.' and entry != '..' then
             local mp = StringLower(entry)
-            if allowedAssets[mp] then 
+            if (not allowedAssets) or allowedAssets[mp] then 
                 LOG("mounting content: " .. entry)
                 MountDirectory(dir .. "/" .. entry, '/')
             end
