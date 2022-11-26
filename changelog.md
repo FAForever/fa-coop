@@ -1,5 +1,19 @@
 # Changelog
 
+## v63
+
+### Bug fixes
+
+- (#106) Fix capture objectives not working
+
+### Changes
+
+- (#106) Update the init file to properly deprecate mods
+
+### Contributors
+
+- Jip (#106)
+
 ## v61
 
 ### Bug fixes
