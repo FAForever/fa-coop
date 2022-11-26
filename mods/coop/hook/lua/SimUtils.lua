@@ -3,8 +3,6 @@ do
     local oldTransferUnitsOwnership = TransferUnitsOwnership
     TransferUnitsOwnership = function(units, ToArmyIndex, captured)
 
-        reprsl(debug.traceback())
-
         if not units then
             return
         end
