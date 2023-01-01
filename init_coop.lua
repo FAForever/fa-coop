@@ -589,11 +589,11 @@ else
 end
 
 -- load in co-op data from of the client
-MountDirectory(InitFileDir .. "/../movies", '/movies')                              -- <- this needs to mount before the voice overs
+MountDirectory(InitFileDir .. "/../movies", '/movies')
+MountDirectory(InitFileDir .. "/../sounds", '/sounds')
 
 -- load in any .nxt that matches the whitelist / blacklist in FAF gamedata
 MountAllowedContent(InitFileDir .. '/../gamedata/', '*.nxt', allowedAssetsNxt)
-MountAllowedContent(InitFileDir .. '/../gamedata/', '*_VO.nx2', nil)                -- <- that would be these voice overs
 
 -- load in any .scd that matches the whitelist / blacklist in FA gamedata
 MountAllowedContent(fa_path .. '/gamedata/', '*.scd', allowedAssetsScd)
