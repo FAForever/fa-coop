@@ -1,5 +1,16 @@
 # Changelog
 
+## v64
+
+### Changes
+
+- (#108) Fixed mission not failing when player's ACU dies and Common Army option is disabled.
+- (#109) Update init file to load sounds from a folder.
+
+### Contributors
+
+- speed2
+
 ## v63
 
 ### Bug fixes
