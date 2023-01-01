@@ -134,19 +134,28 @@ end
 -- @param failureDialogue A VO to play explaining how much of a failure you are (if any).
 -- @param currentObjectives The AssignedObjectives from the map.
 function PlayerDeath(deadCommander, failureDialogue, currentObjectives)
+    if (ScenarioInfo.OpEnded) then
+        return
+    end
+
     if failureDialogue then
         FailDialogue = failureDialogue
     end
+
+    if ScenarioInfo.Options.CommonArmy == 'true' then
         local scenarioFuncPtr = debug.getinfo(2, 'f')
         scenarioFuncPtr = scenarioFuncPtr['func']
+
         local CommanderUnits = GetListOfHumanUnits(categories.COMMAND)
         for _, unit in CommanderUnits do
             if not table.find(unit.EventCallbacks['OnKilled'], scenarioFuncPtr) then
                 CreateUnitDeathTrigger(scenarioFuncPtr, unit, true)
             end
         end
-    if (table.getsize(CommanderUnits)-1 > 0) or (ScenarioInfo.OpEnded) then
-        return
+
+        if (table.getsize(CommanderUnits)-1 > 0) then
+            return
+        end
     end
 
     CDRDeathNISCamera(deadCommander)
