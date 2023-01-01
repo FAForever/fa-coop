@@ -5,7 +5,9 @@
 ### Changes
 
 - (#108) Fixed mission not failing when player's ACU dies and Common Army option is disabled.
-- (#109) Update init file to load sounds from a folder.
+- (#109) Updated init file to load sounds from a folder.
+- Updated VOs of vanilla missions with correct settings.
+- Added briefings, pre and post operation VOs
 
 ### Contributors
 
