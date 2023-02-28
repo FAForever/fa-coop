@@ -480,7 +480,7 @@ local function MountModContent(dir)
                 -- find conflicting files
                 local conflictingFiles = { }
                 for _, file in IoDir(dir .. '/' .. mod .. '/sounds/*') do
-                    if not (file == '.' or file == '..') then 
+                    if not (file == '.' or file == '..' or file == 'voice') then 
                         local identifier = StringLower(file) 
                         if soundsBlocked[identifier] then 
                             TableInsert(conflictingFiles, { file = file, conflict = soundsBlocked[identifier] })
