@@ -44,3 +44,5 @@ function BeginSession()
         end
     end
 end
+
+import "/lua/Oxygen/Main.lua"
